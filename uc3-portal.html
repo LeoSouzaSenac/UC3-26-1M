@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UC3 — Planejar e Administrar Banco de Dados | Prancha de Estudos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a2036;
+    --bg-panel: #0e2b47;
+    --bg-panel-2: #103252;
+    --line: rgba(179, 217, 255, 0.16);
+    --line-strong: rgba(179, 217, 255, 0.32);
+    --paper: #f4f7fb;
+    --ink: #dfeaf7;
+    --ink-dim: #9fb8d4;
+    --cyan: #7dd3fc;
+    --amber: #ffb703;
+    --coral: #ff7a66;
+    --green: #8fe3b0;
+    --radius: 3px;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+    --disp: 'Space Grotesk', sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 28px 28px;
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.65;
+    min-height:100vh;
+  }
+
+  ::selection{ background: var(--amber); color:#0a2036; }
+
+  a { color: var(--cyan); }
+
+  /* ---------- TOP BAR (ruler style) ---------- */
+  .ruler{
+    position: sticky; top:0; z-index: 50;
+    background: linear-gradient(180deg, #0c2740 0%, #0a2036 100%);
+    border-bottom: 1px solid var(--line-strong);
+    padding: 0;
+  }
+  .ruler-inner{
+    max-width: 1040px; margin:0 auto; padding: 14px 18px 0 18px;
+  }
+  .ruler-top{
+    display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    padding-bottom: 10px;
+  }
+  .brand{
+    font-family: var(--disp); font-weight:700; letter-spacing: 0.02em;
+    font-size: 1.05rem; color: var(--paper);
+  }
+  .brand small{
+    display:block; font-family: var(--mono); font-weight:400; font-size:0.65rem;
+    letter-spacing: 0.12em; color: var(--amber); margin-top:2px;
+  }
+  .ruler-meta{
+    font-family: var(--mono); font-size: 0.68rem; color: var(--ink-dim);
+    text-align:right; letter-spacing:0.03em;
+  }
+  nav.tabs{
+    display:flex; gap: 2px; overflow-x:auto; scrollbar-width: thin;
+    border-top: 1px solid var(--line);
+  }
+  nav.tabs button{
+    appearance:none; border:none; cursor:pointer;
+    background: transparent; color: var(--ink-dim);
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.05em;
+    padding: 12px 16px 10px 16px; white-space:nowrap;
+    border-bottom: 3px solid transparent;
+    transition: color .15s ease, border-color .15s ease, background .15s ease;
+  }
+  nav.tabs button .num{ color: var(--amber); margin-right:6px; }
+  nav.tabs button:hover{ color: var(--paper); background: rgba(255,255,255,0.03); }
+  nav.tabs button.active{ color: var(--paper); border-bottom-color: var(--amber); }
+
+  /* ---------- MAIN LAYOUT ---------- */
+  main{ max-width: 1040px; margin: 0 auto; padding: 28px 18px 90px 18px; }
+  .page{ display:none; animation: fadein .25s ease; }
+  .page.active{ display:block; }
+  @keyframes fadein{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
+
+  .sheet{
+    background: var(--bg-panel);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    padding: 26px 26px 22px 26px;
+    margin-bottom: 22px;
+    position: relative;
+  }
+  .sheet::before{ /* corner crop marks, blueprint sheet feel */
+    content:""; position:absolute; inset:6px; border:1px solid var(--line); pointer-events:none;
+  }
+
+  .eyebrow{
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing:0.14em; text-transform:uppercase;
+    color: var(--amber); margin:0 0 8px 0;
+  }
+  h1{ font-family: var(--disp); font-size: clamp(1.7rem, 4vw, 2.5rem); color: var(--paper); margin: 0 0 10px 0; line-height:1.15; }
+  h2{ font-family: var(--disp); font-size: 1.35rem; color: var(--paper); margin: 30px 0 12px 0; padding-top:16px; border-top: 1px dashed var(--line-strong); }
+  .sheet > h2:first-of-type{ border-top:none; padding-top:0; margin-top:6px;}
+  h3{ font-family: var(--disp); font-size: 1.05rem; color: var(--cyan); margin: 20px 0 8px 0; }
+  p{ margin: 0 0 14px 0; color: var(--ink); }
+  ul, ol{ margin: 0 0 14px 0; padding-left: 22px; }
+  li{ margin-bottom: 6px; }
+  strong{ color: var(--paper); }
+  .lede{ font-size: 1.05rem; color: var(--ink-dim); max-width: 62ch; }
+
+  .figure{ margin: 18px 0 22px 0; }
+  .figure img{
+    width:100%; height:auto; display:block; border-radius: var(--radius);
+    border: 1px solid var(--line-strong); background: #fff; padding: 10px;
+  }
+  .figure figcaption{
+    font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim);
+    margin-top:6px; letter-spacing:0.02em;
+  }
+  .figure figcaption a{ color: var(--ink-dim); }
+
+  /* ---------- TOOLTIP TERMS ---------- */
+  .term{
+    color: var(--cyan); border-bottom: 1px dashed var(--cyan); cursor: help;
+    position: relative; font-weight:600; padding: 0 1px;
+  }
+  .term:hover, .term:focus{ background: rgba(125,211,252,0.12); outline:none; }
+  .term::after{
+    content: "\261D  " attr(data-tip);
+    position:absolute; left:0; bottom: calc(100% + 10px);
+    background: var(--amber); color:#1a1200; font-family: var(--sans); font-weight:500;
+    font-size: 0.82rem; line-height:1.35; padding: 9px 12px; border-radius: 2px;
+    width: max-content; max-width: 260px; box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+    opacity:0; visibility:hidden; transform: translateY(4px);
+    transition: opacity .12s ease, transform .12s ease; z-index: 30;
+  }
+  .term::before{
+    content:""; position:absolute; left:10px; bottom: calc(100% + 4px);
+    border: 6px solid transparent; border-top-color: var(--amber);
+    opacity:0; visibility:hidden; transition: opacity .12s ease; z-index: 30;
+  }
+  .term:hover::after, .term:focus::after,
+  .term:hover::before, .term:focus::before{
+    opacity:1; visibility:visible; transform: translateY(0);
+  }
+  .hint-note{
+    font-family: var(--mono); font-size: 0.7rem; color: var(--ink-dim);
+    border: 1px dashed var(--line-strong); border-radius: var(--radius);
+    padding: 8px 12px; display:inline-block; margin-bottom: 20px;
+  }
+  .hint-note .term-demo{ margin: 0 2px; }
+
+  /* ---------- CALLOUT BOXES ---------- */
+  .box{
+    border-radius: var(--radius); padding: 16px 18px; margin: 18px 0;
+    border: 1px solid var(--line-strong); background: var(--bg-panel-2);
+  }
+  .box .box-tag{
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing:0.1em; text-transform:uppercase;
+    display:block; margin-bottom:8px;
+  }
+  .box.example{ border-left: 3px solid var(--green); }
+  .box.example .box-tag{ color: var(--green); }
+  .box.analogy{ border-left: 3px solid var(--cyan); }
+  .box.analogy .box-tag{ color: var(--cyan); }
+  .box.alert{ border-left: 3px solid var(--coral); }
+  .box.alert .box-tag{ color: var(--coral); }
+  .box p:last-child{ margin-bottom:0; }
+
+  code, .code-inline{
+    font-family: var(--mono); background: rgba(125,211,252,0.1); color: var(--cyan);
+    padding: 1px 6px; border-radius:2px; font-size:0.88em;
+  }
+  pre{
+    background: #061729; border:1px solid var(--line-strong); border-radius: var(--radius);
+    padding: 16px 18px; overflow-x:auto; margin: 14px 0 18px 0;
+  }
+  pre code{ background:none; padding:0; color: #c9f2ff; font-size:0.85rem; line-height:1.6; }
+  .sql-kw{ color: var(--amber); }
+  .sql-str{ color: var(--green); }
+  .sql-com{ color: var(--ink-dim); font-style:italic; }
+
+  table.data{ width:100%; border-collapse: collapse; margin: 14px 0 20px 0; font-size:0.92rem; }
+  table.data th, table.data td{ border: 1px solid var(--line-strong); padding: 8px 10px; text-align:left; }
+  table.data th{ background: var(--bg-panel-2); color: var(--paper); font-family: var(--mono); font-size:0.72rem; letter-spacing:0.04em; text-transform:uppercase; }
+  table.data td{ color: var(--ink); }
+  .table-wrap{ overflow-x:auto; }
+
+  /* ---------- TIMELINE ---------- */
+  .timeline{ margin: 20px 0; border-left: 2px solid var(--line-strong); padding-left: 22px; }
+  .tl-item{ position:relative; margin-bottom: 20px; }
+  .tl-item::before{
+    content:""; position:absolute; left:-27.5px; top:4px; width:11px; height:11px;
+    background: var(--amber); border-radius:50%; border:2px solid var(--bg-panel);
+  }
+  .tl-year{ font-family: var(--mono); color: var(--amber); font-size:0.78rem; letter-spacing:0.05em; }
+  .tl-item h4{ margin: 2px 0 4px 0; color: var(--paper); font-family: var(--disp); font-size:1rem; }
+  .tl-item p{ margin:0; color: var(--ink-dim); font-size:0.92rem; }
+
+  /* ---------- INDEX / HOME CARDS ---------- */
+  .grid-cards{ display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-top: 18px; }
+  .card{
+    border: 1px solid var(--line-strong); border-radius: var(--radius); padding:16px 16px 14px 16px;
+    background: var(--bg-panel-2); cursor:pointer; transition: transform .15s ease, border-color .15s ease;
+  }
+  .card:hover{ transform: translateY(-2px); border-color: var(--amber); }
+  .card .card-n{ font-family: var(--mono); color: var(--amber); font-size:0.75rem; }
+  .card h4{ font-family: var(--disp); color: var(--paper); margin: 6px 0 6px 0; font-size:1.05rem; }
+  .card p{ font-size: 0.86rem; color: var(--ink-dim); margin:0; }
+  .card .card-hrs{ display:inline-block; margin-top:10px; font-family: var(--mono); font-size:0.7rem; color: var(--cyan); border:1px solid var(--line-strong); padding:2px 8px; border-radius:20px; }
+
+  /* ---------- EXERCISES ---------- */
+  .exsheet{
+    background: var(--paper); color:#12324f; border-radius: var(--radius);
+    padding: 24px 26px; margin-top:10px;
+    background-image: linear-gradient(rgba(18,50,79,0.06) 1px, transparent 1px);
+    background-size: 100% 32px;
+  }
+  .exsheet h2{ color:#0a2036; border-top: 1px dashed rgba(18,50,79,0.3); }
+  .exsheet .eyebrow{ color:#b56a00; }
+  .ex-item{ margin-bottom: 22px; padding-bottom:18px; border-bottom: 1px dashed rgba(18,50,79,0.25); }
+  .ex-item:last-child{ border-bottom:none; }
+  .ex-head{ display:flex; align-items:flex-start; gap:10px; margin-bottom:8px; }
+  .ex-num{ font-family: var(--mono); font-weight:700; color:#0a2036; background:#ffe6b0; border-radius:50%; width:26px; height:26px; min-width:26px; display:flex; align-items:center; justify-content:center; font-size:0.8rem; }
+  .ex-type{ font-family: var(--mono); font-size:0.65rem; letter-spacing:0.08em; text-transform:uppercase; color:#b56a00; display:block; margin-bottom:4px; }
+  .ex-body{ color:#1a3a54; }
+  .ex-body p{ color:#1a3a54; margin:0 0 8px 0; }
+  .ex-options{ list-style:none; padding-left:0; margin: 8px 0 0 36px; }
+  .ex-options li{ margin-bottom:5px; }
+  .ex-options li::before{ content: "\2610  "; }
+  .blank-line{ display:inline-block; border-bottom: 1px solid #12324f; min-width: 140px; }
+  details.gab{ margin-top:10px; margin-left:36px; }
+  details.gab summary{ cursor:pointer; font-family: var(--mono); font-size:0.72rem; color:#0a5f8a; letter-spacing:0.04em; }
+  details.gab .gab-content{ margin-top:8px; padding:10px 12px; background: rgba(10,95,138,0.08); border-left:3px solid #0a5f8a; font-size:0.88rem; }
+
+  .code-ex textarea{ display:none; }
+
+  footer.stamp{
+    max-width:1040px; margin: 0 auto 40px auto; padding: 0 18px;
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+    font-family: var(--mono); font-size:0.68rem; color: var(--ink-dim); letter-spacing:0.03em;
+  }
+
+  .prevnext{ display:flex; justify-content:space-between; gap:12px; margin-top: 24px; flex-wrap:wrap;}
+  .prevnext button{
+    appearance:none; cursor:pointer; background: var(--bg-panel-2); color: var(--paper);
+    border: 1px solid var(--line-strong); border-radius: var(--radius); padding: 10px 16px;
+    font-family: var(--mono); font-size: 0.75rem; letter-spacing:0.03em;
+  }
+  .prevnext button:hover{ border-color: var(--amber); color: var(--amber); }
+
+  @media (max-width: 600px){
+    .sheet{ padding: 20px 16px; }
+    .term::after{ max-width: 200px; font-size:0.78rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ruler">
+  <div class="ruler-inner">
+    <div class="ruler-top">
+      <div class="brand">UC3 · Planejar e Administrar Banco de Dados
+        <small>TÉCNICO EM DESENVOLVIMENTO DE SISTEMAS — SENAC RS</small>
+      </div>
+      <div class="ruler-meta">BLOCO 1 · FUNDAMENTOS<br>PRANCHAS 01–04</div>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button data-page="home" class="active"><span class="num">00</span>HOME</button>
+      <button data-page="aula1"><span class="num">01</span>INTRODUÇÃO A BD</button>
+      <button data-page="aula2"><span class="num">02</span>MODELAGEM CONCEITUAL</button>
+      <button data-page="aula3"><span class="num">03</span>MODELO ENTIDADE-RELACIONAMENTO</button>
+      <button data-page="aula4"><span class="num">04</span>NORMALIZAÇÃO</button>
+    </nav>
+  </div>
+</div>
+
+<main>
+
+  <!-- ============ HOME ============ -->
+  <section class="page active" id="page-home">
+    <div class="sheet">
+      <p class="eyebrow">Prancha 00 — Planta Geral</p>
+      <h1>Bem-vindo(a) ao canteiro de obras do Banco de Dados</h1>
+      <p class="lede">Este portal cobre o <strong>Bloco 1</strong> da UC3: os fundamentos que sustentam tudo o que vem depois — SQL na veia, modelagem e normalização. Pense nele como a planta baixa de um prédio: antes de levantar paredes (tabelas) você precisa entender o terreno, desenhar a planta e calcular a estrutura.</p>
+      <p>Toda palavra técnica no site aparece <span class="term" tabindex="0" data-tip="Isso é só um exemplo — passe o mouse ou toque nos termos ao longo do texto para ver a tradução simples deles.">sublinhada e pontilhada</span> como esta. Passe o mouse (ou toque, no celular) para ver a explicação em português bem simples, sem economês.</p>
+    </div>
+
+    <div class="sheet">
+      <h2 style="margin-top:0; padding-top:0; border-top:none;">Índice do Bloco 1</h2>
+      <div class="grid-cards">
+        <div class="card" onclick="goTo('aula1')">
+          <span class="card-n">PRANCHA 01</span>
+          <h4>Introdução a Banco de Dados</h4>
+          <p>O que é dado, o que é um SGBD, relacional vs. não-relacional, e de onde veio o SQL.</p>
+          <span class="card-hrs">≈ 4h de estudo</span>
+        </div>
+        <div class="card" onclick="goTo('aula2')">
+          <span class="card-n">PRANCHA 02</span>
+          <h4>Modelagem Conceitual</h4>
+          <p>Requisitos, dicionário de dados, teoria dos conjuntos e domínio de atributos.</p>
+          <span class="card-hrs">≈ 4h de estudo</span>
+        </div>
+        <div class="card" onclick="goTo('aula3')">
+          <span class="card-n">PRANCHA 03</span>
+          <h4>Modelo Entidade-Relacionamento</h4>
+          <p>Entidades, atributos, chaves, relacionamentos e cardinalidade — o desenho do banco.</p>
+          <span class="card-hrs">≈ 4h de estudo</span>
+        </div>
+        <div class="card" onclick="goTo('aula4')">
+          <span class="card-n">PRANCHA 04</span>
+          <h4>Normalização</h4>
+          <p>Como organizar tabelas para eliminar redundância e evitar dor de cabeça futura.</p>
+          <span class="card-hrs">≈ 4h de estudo</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <h2 style="margin-top:0; padding-top:0; border-top:none;">Como estudar cada prancha</h2>
+      <p>Cada aula segue a mesma estrutura, como uma prancha de projeto de verdade:</p>
+      <ol>
+        <li><strong>Conteúdo teórico</strong> dividido em blocos pequenos, sempre com pelo menos um exemplo prático logo depois da explicação.</li>
+        <li><strong>Boxes de exemplo e analogia</strong> (fundo destacado) para fixar a ideia com uma situação do dia a dia.</li>
+        <li><strong>Sala de exercícios</strong> no fim da página — um "papel de prova" com questões variadas. O gabarito fica escondido atrás de um clique, para você tentar resolver antes de espiar.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ AULA 1 ============ -->
+  <section class="page" id="page-aula1">
+    <div class="sheet">
+      <p class="eyebrow">Prancha 01 / 04 — Bloco 1</p>
+      <h1>Aula 1 — Introdução a Banco de Dados</h1>
+      <p class="lede">Antes de escrever a primeira linha de <span class="term" tabindex="0" data-tip="A linguagem que usamos para conversar com o banco de dados: pedir, guardar, mudar ou apagar informações.">SQL</span>, você precisa entender três coisas: o que é um dado, onde ele mora, e por que existe uma linguagem inteira só para cuidar dele. É isso que fazemos nesta aula.</p>
+
+      <div class="figure">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Rack001.jpg?width=900" alt="Rack de servidores em um data center">
+        <figcaption>Um rack de servidores reais — é fisicamente aqui, em discos e memórias dentro de máquinas como essas, que um banco de dados vive. Fonte: Wikimedia Commons.</figcaption>
+      </div>
+
+      <h2>1.1 — Dado, informação e conhecimento não são a mesma coisa</h2>
+      <p>É comum usar essas três palavras como sinônimas, mas em tecnologia da informação elas representam degraus diferentes de uma escada:</p>
+      <div class="box example">
+        <span class="box-tag">Exemplo</span>
+        <p><strong>Dado</strong> é solto e sem contexto: <code>28</code>. <strong>Informação</strong> é o dado organizado com significado: "a temperatura hoje é 28°C". <strong>Conhecimento</strong> é o que você faz com essa informação: "28°C é quente, vou levar uma roupa mais leve".</p>
+      </div>
+      <p>Um <span class="term" tabindex="0" data-tip="Um sistema que guarda dados organizados, de um jeito que o computador consegue buscar, alterar e apagar rapidamente.">banco de dados</span> trabalha na primeira camada dessa escada: ele armazena e organiza <em>dados</em>. Quem transforma esses dados em informação útil, na maioria das vezes, é a aplicação (o site, o sistema, o app) que está por cima do banco — mas para isso acontecer bem, o banco precisa estar muito bem estruturado. É aí que entra o trabalho do profissional de UC3.</p>
+
+      <h2>1.2 — O que é um Banco de Dados e o que é um SGBD</h2>
+      <p>Um <strong>banco de dados</strong> é, de forma simples, um conjunto organizado de dados relacionados entre si, guardados de forma permanente (não somem quando você desliga o computador). Pense numa grande "biblioteca de fichários": cada fichário guarda um tipo de informação (clientes, produtos, pedidos), e as fichas dentro dele seguem sempre o mesmo padrão.</p>
+      <p>Só que ninguém manuseia esses fichários "na mão". Existe um programa especializado só para isso: o <span class="term" tabindex="0" data-tip="Sigla para Sistema Gerenciador de Banco de Dados: o programa que organiza, protege e permite consultar o banco de dados. É o 'bibliotecário' do sistema.">SGBD</span> (Sistema Gerenciador de Banco de Dados). É o SGBD que garante que dois usuários não vão bagunçar o mesmo dado ao mesmo tempo, que ninguém sem permissão vai ler informação sigilosa, e que, se a luz cair no meio de uma gravação, o dado não fica corrompido.</p>
+      <div class="box analogy">
+        <span class="box-tag">Analogia</span>
+        <p>Se o banco de dados é a <strong>biblioteca</strong>, o SGBD é o <strong>bibliotecário</strong>: ele sabe exatamente onde cada livro está, empresta e devolve livros de forma organizada, e não deixa duas pessoas rasgarem a mesma página ao mesmo tempo.</p>
+      </div>
+      <p>Exemplos de SGBDs que você vai ouvir falar (e usar) o curso inteiro: <strong>MySQL</strong>, <strong>PostgreSQL</strong>, <strong>Oracle Database</strong> e <strong>SQL Server</strong>. Todos eles "falam" a mesma língua de base — o SQL — mas cada um tem seus próprios sotaques e recursos extras.</p>
+
+      <h2>1.3 — Banco de dados relacional × não-relacional</h2>
+      <p>Existem duas grandes famílias de bancos de dados, e é essencial saber diferenciá-las logo no início do curso.</p>
+      <h3>Banco de dados relacional</h3>
+      <p>Organiza tudo em <span class="term" tabindex="0" data-tip="Uma grade de linhas e colunas, exatamente como uma planilha do Excel — cada linha é um registro, cada coluna é uma informação sobre ele.">tabelas</span>, como planilhas conectadas entre si. Cada tabela tem colunas fixas (nome, e-mail, telefone) e cada linha é um registro (uma pessoa, um produto). As tabelas se conectam por <span class="term" tabindex="0" data-tip="Um valor guardado numa tabela que aponta para o registro de outra tabela, criando a 'ligação' entre elas.">chaves estrangeiras</span> — vamos estudar isso a fundo na Aula 3. É o modelo mais usado no mercado, e é o foco desta UC.</p>
+      <h3>Banco de dados não-relacional (NoSQL)</h3>
+      <p>Não obriga uma estrutura fixa de tabelas. Os dados podem ser guardados como documentos soltos (parecido com um arquivo JSON), pares de chave-valor, ou grafos de conexões. É muito usado quando os dados mudam de formato com frequência ou quando o volume é gigantesco (redes sociais, sensores IoT).</p>
+      <div class="box analogy">
+        <span class="box-tag">Analogia</span>
+        <p>O banco <strong>relacional</strong> é um arquivo de escritório: gavetas etiquetadas, pastas no mesmo formato, tudo padronizado. O banco <strong>não-relacional</strong> é uma caixa de sapatos onde cada papel pode ter um formato diferente — mais flexível, porém mais difícil de garantir que "está tudo igual".</p>
+      </div>
+
+      <div class="table-wrap">
+      <table class="data">
+        <thead><tr><th>Característica</th><th>Relacional</th><th>Não-relacional</th></tr></thead>
+        <tbody>
+          <tr><td>Estrutura</td><td>Tabelas fixas (linhas/colunas)</td><td>Documentos, chave-valor, grafos</td></tr>
+          <tr><td>Linguagem padrão</td><td>SQL</td><td>Varia por produto (sem padrão único)</td></tr>
+          <tr><td>Ideal para</td><td>Dados estruturados, transações (bancos, ERPs)</td><td>Dados variáveis, alto volume (redes sociais, logs)</td></tr>
+          <tr><td>Exemplos</td><td>MySQL, PostgreSQL, Oracle</td><td>MongoDB, Redis, Cassandra</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h2>1.4 — Uma linha do tempo rápida do SQL</h2>
+      <p>Entender de onde o SQL veio ajuda a entender por que ele é do jeito que é.</p>
+      <div class="timeline">
+        <div class="tl-item">
+          <span class="tl-year">1970</span>
+          <h4>O artigo de Edgar Codd</h4>
+          <p>O matemático Edgar F. Codd, pesquisador da IBM, publica um artigo propondo o <span class="term" tabindex="0" data-tip="A ideia de organizar dados em tabelas relacionadas entre si por chaves, em vez de estruturas soltas e desorganizadas.">modelo relacional</span> — a base teórica de tudo que estudamos nesta UC.</p>
+        </div>
+        <div class="tl-item">
+          <span class="tl-year">1974</span>
+          <h4>Nasce o SEQUEL</h4>
+          <p>Pesquisadores da IBM criam a linguagem SEQUEL (depois renomeada para SQL) para "conversar" com bancos relacionais usando frases parecidas com inglês comum.</p>
+        </div>
+        <div class="tl-item">
+          <span class="tl-year">1979</span>
+          <h4>Primeiro SGBD comercial</h4>
+          <p>A Oracle lança a primeira versão comercial de um SGBD relacional com suporte a SQL.</p>
+        </div>
+        <div class="tl-item">
+          <span class="tl-year">1986</span>
+          <h4>Vira padrão internacional</h4>
+          <p>O SQL se torna um padrão reconhecido pela ANSI e, depois, pela ISO — por isso o comando <code>SELECT</code> funciona quase igual em qualquer SGBD relacional do mundo.</p>
+        </div>
+        <div class="tl-item">
+          <span class="tl-year">Hoje</span>
+          <h4>Ainda reinando</h4>
+          <p>Mais de 50 anos depois, o SQL continua sendo a linguagem mais usada para lidar com dados estruturados — é isso que você vai dominar ao longo desta UC.</p>
+        </div>
+      </div>
+
+      <h2>1.5 — Ferramentas que você vai usar no laboratório</h2>
+      <p>Ao longo da UC3 você vai alternar entre algumas ferramentas. Não precisa decorar agora, só reconhecer o nome:</p>
+      <ul>
+        <li><strong>MySQL Workbench</strong> — interface visual para desenhar, consultar e administrar bancos MySQL.</li>
+        <li><strong>SQL Developer</strong> e <strong>SQL Plus</strong> — ferramentas usadas para administrar bancos Oracle: uma com interface gráfica, outra em linha de comando.</li>
+        <li>Um <span class="term" tabindex="0" data-tip="Um programa de computador para criar diagramas — no nosso caso, para desenhar visualmente as tabelas e como elas se conectam.">software de modelagem</span>, como o próprio MySQL Workbench ou o draw.io, para desenhar o banco antes de criá-lo de verdade (isso é assunto da Aula 3).</li>
+      </ul>
+
+      <div class="box alert">
+        <span class="box-tag">Fica de olho</span>
+        <p>Repare que já apareceram três siglas parecidas: SQL (a linguagem), SGBD (o programa que gerencia o banco) e MySQL (um SGBD específico que "fala" SQL). É normal confundir no início — releia esta seção se precisar.</p>
+      </div>
+    </div>
+
+    <div class="sheet exsheet">
+      <p class="eyebrow">Sala de exercícios — Aula 1</p>
+      <h2 style="margin-top:0; padding-top:0; border-top:none;">Fixando o conteúdo</h2>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">1</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Múltipla escolha</span>
+            <p>Qual das opções abaixo representa corretamente a diferença entre dado e informação?</p>
+            <ul class="ex-options">
+              <li>Dado e informação são sempre a mesma coisa.</li>
+              <li>Dado é o número solto e sem contexto; informação é o dado organizado com significado.</li>
+              <li>Informação é sempre mais antiga que o dado.</li>
+              <li>Dado só existe em bancos não-relacionais.</li>
+            </ul>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">Alternativa correta: "Dado é o número solto e sem contexto; informação é o dado organizado com significado." Exemplo: <code>28</code> é dado; "a temperatura hoje é 28°C" é informação.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">2</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Verdadeiro ou falso</span>
+            <p>( &nbsp;&nbsp; ) O SGBD é a mesma coisa que o banco de dados; os dois termos são sinônimos perfeitos.</p>
+            <p>( &nbsp;&nbsp; ) O MySQL é um exemplo de SGBD relacional.</p>
+            <p>( &nbsp;&nbsp; ) Um banco não-relacional sempre organiza os dados em tabelas fixas.</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">F — V — F. O SGBD é o "bibliotecário" que gerencia o banco de dados; eles são conceitos relacionados, mas não sinônimos. O MySQL é, de fato, um SGBD relacional. Bancos não-relacionais evitam justamente a estrutura fixa de tabelas.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">3</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Complete a frase</span>
+            <p>O artigo que deu origem ao modelo relacional foi publicado em <span class="blank-line"></span> pelo pesquisador <span class="blank-line"></span>, da empresa <span class="blank-line"></span>.</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">1970 — Edgar F. Codd — IBM.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">4</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Associe as colunas</span>
+            <p>Ligue cada ferramenta à sua descrição:</p>
+            <p>(A) MySQL Workbench &nbsp;&nbsp; (B) SQL Plus &nbsp;&nbsp; (C) SQL</p>
+            <p>( &nbsp;&nbsp; ) Linguagem usada para consultar e manipular dados.</p>
+            <p>( &nbsp;&nbsp; ) Ferramenta de linha de comando para administrar bancos Oracle.</p>
+            <p>( &nbsp;&nbsp; ) Interface visual para desenhar e administrar bancos MySQL.</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">C — B — A.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">5</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Dissertativa curta</span>
+            <p>Explique, com suas próprias palavras e usando uma analogia (pode ser diferente da usada na aula), a diferença entre banco de dados relacional e não-relacional.</p>
+            <details class="gab"><summary>Ver um exemplo de resposta</summary><div class="gab-content">Resposta livre. Um bom exemplo de resposta cita que o relacional organiza tudo em tabelas padronizadas e conectadas por chaves, enquanto o não-relacional aceita formatos variados de um registro para outro, sendo mais flexível mas menos padronizado.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">6</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Classifique</span>
+            <p>Para cada cenário abaixo, indique se você usaria (R) um banco relacional ou (N) um não-relacional:</p>
+            <p>( &nbsp;&nbsp; ) Sistema bancário que precisa garantir que toda transferência seja exata, sem perder um centavo.</p>
+            <p>( &nbsp;&nbsp; ) Rede social armazenando bilhões de posts com formatos de conteúdo diferentes (texto, imagem, vídeo, enquete).</p>
+            <p>( &nbsp;&nbsp; ) Sistema de matrícula de uma escola, com alunos, turmas e notas bem estruturados.</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">R — N — R. Sistemas que exigem consistência rígida de dados estruturados (bancos, matrículas) tendem para o relacional; volumes gigantescos de dados heterogêneos tendem para o não-relacional.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="prevnext">
+        <button onclick="goTo('home')">&larr; Voltar ao Índice</button>
+        <button onclick="goTo('aula2')">Ir para Aula 2 — Modelagem Conceitual &rarr;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AULA 2 ============ -->
+  <section class="page" id="page-aula2">
+    <div class="sheet">
+      <p class="eyebrow">Prancha 02 / 04 — Bloco 1</p>
+      <h1>Aula 2 — Modelagem Conceitual do Banco de Dados</h1>
+      <p class="lede">Nenhum engenheiro começa a construir um prédio sem antes desenhar a planta. Nesta aula, aprendemos a "plantar" um banco de dados no papel — entender o que o cliente precisa, documentar isso e preparar o terreno para o desenho do <span class="term" tabindex="0" data-tip="Modelo Entidade-Relacionamento: o 'mapa' visual de como as tabelas do banco vão se conectar. É o assunto da Aula 3.">MER</span>, que vem na próxima aula.</p>
+
+      <div class="figure">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chestnut_Hills_-_blueprint.jpg?width=900" alt="Planta baixa arquitetônica desenhada à mão, estilo blueprint">
+        <figcaption>Uma planta baixa arquitetônica clássica. A modelagem de banco de dados segue a mesma lógica: primeiro planeja, depois constrói. Fonte: Wikimedia Commons.</figcaption>
+      </div>
+
+      <h2>2.1 — Por que modelar antes de programar?</h2>
+      <p>É tentador abrir o SGBD e sair criando tabelas "no improviso". O problema é que, sem planejamento, é quase certo que você vai precisar refazer tudo depois que perceber um relacionamento que esqueceu, ou uma informação que faltou.</p>
+      <div class="box analogy">
+        <span class="box-tag">Analogia</span>
+        <p>Construir um banco de dados sem modelar antes é como erguer uma casa sem planta: pode até ficar de pé, mas na hora de passar o encanamento você descobre que não sobrou espaço para os canos — e vai ter que quebrar parede. No banco de dados, "quebrar parede" significa migrar dados de produção, correndo o risco de perder informação.</p>
+      </div>
+      <p>Por isso, o processo de modelagem passa por três grandes etapas, do mais abstrato para o mais concreto: <strong>modelo conceitual</strong> (o que estudamos aqui — sem se preocupar ainda com o SGBD específico), <strong>modelo lógico</strong> (já pensando em tabelas e tipos de dado) e <strong>modelo físico</strong> (o banco realmente criado, com os comandos SQL rodados). Esta aula foca no primeiro passo.</p>
+
+      <h2>2.2 — Levantamento de requisitos</h2>
+      <p>Tudo começa conversando com quem vai usar o sistema — o <span class="term" tabindex="0" data-tip="Qualquer pessoa ou grupo interessado no projeto: o cliente, o usuário final, o dono do negócio.">stakeholder</span>. O objetivo é descobrir os <strong>requisitos</strong>: o que o sistema precisa fazer e como ele precisa se comportar.</p>
+      <p>Os requisitos se dividem em dois tipos:</p>
+      <ul>
+        <li><span class="term" tabindex="0" data-tip="Uma ação ou funcionalidade que o sistema PRECISA fazer — o 'o quê' do sistema.">Requisito funcional</span>: descreve uma ação que o sistema deve executar. Exemplo: "o sistema deve permitir cadastrar um novo aluno".</li>
+        <li><span class="term" tabindex="0" data-tip="Uma característica de qualidade do sistema — o 'como' ele deve se comportar, não uma ação específica.">Requisito não funcional</span>: descreve uma característica de qualidade, não uma ação. Exemplo: "o cadastro de aluno deve ser concluído em menos de 2 segundos" ou "os dados dos alunos devem ficar criptografados".</li>
+      </ul>
+      <div class="box example">
+        <span class="box-tag">Exemplo prático</span>
+        <p>Imagine que você está modelando o banco de uma <strong>locadora de bicicletas</strong>. Ao entrevistar o dono, você anota:</p>
+        <ul>
+          <li>Funcional: "preciso saber quais bicicletas estão emprestadas agora".</li>
+          <li>Funcional: "preciso cobrar uma multa se a bicicleta voltar atrasada".</li>
+          <li>Não funcional: "o sistema precisa funcionar mesmo sem internet na loja".</li>
+        </ul>
+      </div>
+
+      <h2>2.3 — Dicionário de dados</h2>
+      <p>Depois de levantar os requisitos, é hora de listar, de forma organizada, cada informação (campo) que o sistema vai precisar guardar. Esse documento se chama <span class="term" tabindex="0" data-tip="Um documento — geralmente uma tabela — que lista todos os campos de dados de um sistema, com nome, tipo, tamanho e descrição de cada um.">dicionário de dados</span>. Ele funciona como um "glossário oficial" do projeto: todo mundo da equipe consulta o mesmo documento para saber exatamente o nome e o formato de cada campo.</p>
+      <div class="table-wrap">
+      <table class="data">
+        <thead><tr><th>Campo</th><th>Tipo</th><th>Tamanho</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td>id_bicicleta</td><td>Inteiro</td><td>—</td><td>Identificador único da bicicleta</td></tr>
+          <tr><td>modelo</td><td>Texto</td><td>60</td><td>Nome/modelo da bicicleta</td></tr>
+          <tr><td>status</td><td>Texto</td><td>20</td><td>"disponível", "emprestada" ou "manutenção"</td></tr>
+          <tr><td>valor_diaria</td><td>Decimal</td><td>6,2</td><td>Valor cobrado por dia de aluguel</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>Repare que documentar assim, antes de criar qualquer tabela, evita um erro clássico de iniciante: chamar o mesmo tipo de dado de nomes diferentes em partes diferentes do sistema (por exemplo, <code>id_bike</code> em um lugar e <code>bicicleta_id</code> em outro).</p>
+
+      <h2>2.4 — Teoria dos conjuntos aplicada a banco de dados</h2>
+      <p>Pode parecer estranho falar de matemática numa aula de banco de dados, mas o modelo relacional inteiro nasceu de conceitos de <span class="term" tabindex="0" data-tip="Ramo da matemática que estuda grupos (conjuntos) de elementos e as operações entre eles — como unir dois grupos ou achar o que eles têm em comum.">teoria dos conjuntos</span>. Uma tabela, no fundo, é tratada como um <em>conjunto</em> de linhas. Isso vai explicar, lá na frente, por que comandos SQL como <code>UNION</code> e <code>INTERSECT</code> têm esse nome:</p>
+      <ul>
+        <li><strong>União</strong> — junta os elementos de dois conjuntos, sem repetir.</li>
+        <li><strong>Interseção</strong> — traz só os elementos que existem nos dois conjuntos ao mesmo tempo.</li>
+        <li><strong>Diferença</strong> — traz os elementos que existem em um conjunto, mas não no outro.</li>
+      </ul>
+      <div class="box analogy">
+        <span class="box-tag">Analogia</span>
+        <p>Imagine a lista de alunos que fazem <strong>Inglês</strong> e a lista de alunos que fazem <strong>Robótica</strong>. A <strong>união</strong> das duas listas é "todo mundo que faz pelo menos uma das duas". A <strong>interseção</strong> é "quem faz as duas ao mesmo tempo". A <strong>diferença</strong> (Inglês menos Robótica) é "quem faz só Inglês".</p>
+      </div>
+      <p>Guarde essa ideia — ela volta com tudo na Aula 8 do nosso curso, quando estudarmos <code>JOIN</code>s de verdade em SQL.</p>
+
+      <h2>2.5 — Tipos de dados e domínio de um atributo</h2>
+      <p>Cada informação que vamos guardar tem um <strong>tipo</strong> (número, texto, data...) e um <span class="term" tabindex="0" data-tip="O conjunto de valores válidos que um campo pode assumir. Exemplo: o domínio do campo 'nota' pode ser só números de 0 a 10.">domínio</span> — ou seja, os valores que ela pode legitimamente assumir. Definir o domínio ainda na modelagem conceitual evita bancos de dados "bagunçados" no futuro.</p>
+      <div class="box example">
+        <span class="box-tag">Exemplo</span>
+        <p>O campo <code>status</code> da nossa tabela de bicicletas tem domínio limitado: só pode ser "disponível", "emprestada" ou "manutenção" — nunca, por exemplo, "amarela". Já decidir isso agora evita que, no futuro, alguém digite valores inconsistentes ali dentro.</p>
+      </div>
+
+      <h2>2.6 — Integridade referencial (uma primeira olhada)</h2>
+      <p><span class="term" tabindex="0" data-tip="A garantia de que uma informação que 'aponta' para outra tabela sempre aponta para algo que realmente existe — nunca para o vazio.">Integridade referencial</span> é o princípio que garante que as conexões entre tabelas nunca fiquem "quebradas". Se um empréstimo de bicicleta referencia a bicicleta de <code>id_bicicleta = 12</code>, a integridade referencial garante que essa bicicleta 12 realmente existe na tabela de bicicletas — e impede, por exemplo, que alguém apague a bicicleta 12 enquanto ela ainda está emprestada.</p>
+      <p>Vamos aprofundar esse conceito na Aula 3, quando falarmos de chaves primárias e estrangeiras — por enquanto, guarde a ideia central: <strong>nenhuma referência pode apontar para o nada</strong>.</p>
+    </div>
+
+    <div class="sheet exsheet">
+      <p class="eyebrow">Sala de exercícios — Aula 2</p>
+      <h2 style="margin-top:0; padding-top:0; border-top:none;">Fixando o conteúdo</h2>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">1</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Classifique</span>
+            <p>Classifique cada requisito abaixo como (F) funcional ou (NF) não funcional:</p>
+            <p>( &nbsp;&nbsp; ) "O sistema deve emitir um recibo em PDF ao final da compra."</p>
+            <p>( &nbsp;&nbsp; ) "O sistema deve suportar 500 usuários simultâneos sem travar."</p>
+            <p>( &nbsp;&nbsp; ) "As senhas dos usuários devem ficar criptografadas no banco."</p>
+            <p>( &nbsp;&nbsp; ) "O sistema deve permitir cancelar um pedido em até 24h."</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">F — NF — NF — F. Requisitos funcionais descrevem ações do sistema; não funcionais descrevem qualidades (desempenho, segurança).</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">2</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Estudo de caso</span>
+            <p>Você está modelando o banco de uma <strong>pizzaria</strong> que faz entregas. Escreva dois requisitos funcionais e um requisito não funcional que fariam sentido para esse sistema.</p>
+            <details class="gab"><summary>Ver um exemplo de resposta</summary><div class="gab-content">Funcional: "o sistema deve permitir montar uma pizza com sabores personalizados". Funcional: "o sistema deve calcular o valor total do pedido incluindo taxa de entrega". Não funcional: "o status do pedido deve atualizar em tempo real para o cliente acompanhar a entrega".</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">3</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Monte o dicionário de dados</span>
+            <p>Ainda pensando na pizzaria: monte um mini dicionário de dados (nome do campo, tipo, tamanho e descrição) para a entidade <strong>Pizza</strong>, com pelo menos 4 campos.</p>
+            <details class="gab"><summary>Ver um exemplo de resposta</summary><div class="gab-content">id_pizza (Inteiro) — identificador único; nome (Texto, 40) — nome da pizza; tamanho (Texto, 15) — "pequena/média/grande"; preco (Decimal, 6,2) — valor cobrado.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">4</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Verdadeiro ou falso</span>
+            <p>( &nbsp;&nbsp; ) A união de dois conjuntos traz apenas os elementos que aparecem nos dois ao mesmo tempo.</p>
+            <p>( &nbsp;&nbsp; ) A interseção de dois conjuntos traz apenas os elementos comuns a ambos.</p>
+            <p>( &nbsp;&nbsp; ) Definir o domínio de um atributo ainda na modelagem conceitual ajuda a evitar dados inconsistentes no futuro.</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">F — V — V. A união traz todos os elementos dos dois conjuntos (sem repetir); quem traz só os elementos em comum é a interseção.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">5</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Dissertativa curta</span>
+            <p>Explique com suas palavras o que é integridade referencial, dando um exemplo diferente do usado na aula (pode ser de qualquer sistema do dia a dia: escola, loja, streaming...).</p>
+            <details class="gab"><summary>Ver um exemplo de resposta</summary><div class="gab-content">Resposta livre. Um bom exemplo mostra uma referência entre duas tabelas (ex.: um pedido que aponta para um cliente) e explica que a integridade referencial impede que essa referência aponte para um cliente que não existe (ou foi apagado).</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="prevnext">
+        <button onclick="goTo('aula1')">&larr; Aula 1 — Introdução a BD</button>
+        <button onclick="goTo('aula3')">Ir para Aula 3 — MER &rarr;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AULA 3 ============ -->
+  <section class="page" id="page-aula3">
+    <div class="sheet">
+      <p class="eyebrow">Prancha 03 / 04 — Bloco 1</p>
+      <h1>Aula 3 — Modelo Entidade-Relacionamento (MER)</h1>
+      <p class="lede">Chegou a hora de transformar o dicionário de dados e os requisitos da Aula 2 em um <strong>desenho</strong>. O MER é o "mapa" visual do banco: mostra quais informações existem, como elas se agrupam e como se conectam — tudo isso antes de criar uma única tabela de verdade.</p>
+
+      <div class="figure">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/ERD_Representation.svg?width=700" alt="Exemplo de diagrama entidade-relacionamento (ERD)">
+        <figcaption>Exemplo clássico de diagrama entidade-relacionamento (ERD): entidades em retângulos, atributos ligados a elas, relacionamentos conectando as entidades. Fonte: Wikimedia Commons.</figcaption>
+      </div>
+
+      <h2>3.1 — O que é uma entidade</h2>
+      <p>Uma <span class="term" tabindex="0" data-tip="Qualquer 'coisa' do mundo real (ou abstrata) sobre a qual queremos guardar informações — vira uma tabela no futuro.">entidade</span> representa algo do mundo real (ou até abstrato) sobre o qual queremos guardar dados: um <strong>Aluno</strong>, um <strong>Produto</strong>, um <strong>Pedido</strong>, uma <strong>Bicicleta</strong>. No desenho do MER, cada entidade vira um retângulo. Mais para frente, cada entidade normalmente vira uma <strong>tabela</strong> no banco de dados de verdade.</p>
+      <div class="box example">
+        <span class="box-tag">Exemplo</span>
+        <p>No sistema da nossa locadora de bicicletas, entidades naturais seriam: <strong>Bicicleta</strong>, <strong>Cliente</strong> e <strong>Empréstimo</strong>.</p>
+      </div>
+
+      <h2>3.2 — Atributos: o que a entidade "sabe" sobre si mesma</h2>
+      <p>Cada entidade tem <span class="term" tabindex="0" data-tip="Uma característica ou informação que descreve uma entidade — vira uma coluna da tabela no futuro.">atributos</span>: as informações que descrevem aquela entidade. A entidade Cliente pode ter os atributos <em>nome</em>, <em>CPF</em>, <em>telefone</em>. Existem alguns tipos especiais de atributo que vale a pena conhecer:</p>
+      <ul>
+        <li><strong>Atributo simples</strong>: não pode ser dividido. Ex.: <em>CPF</em>.</li>
+        <li><span class="term" tabindex="0" data-tip="Um atributo que pode ser 'quebrado' em partes menores com significado próprio.">Atributo composto</span>: pode ser dividido em partes menores. Ex.: <em>endereço</em> pode virar <em>rua</em>, <em>número</em>, <em>cidade</em>.</li>
+        <li><span class="term" tabindex="0" data-tip="Um atributo que pode ter mais de um valor ao mesmo tempo para a mesma entidade.">Atributo multivalorado</span>: pode ter mais de um valor para a mesma entidade. Ex.: um Cliente pode ter <em>vários telefones</em>.</li>
+        <li><strong>Atributo derivado</strong>: pode ser calculado a partir de outro. Ex.: <em>idade</em> pode ser derivada da <em>data de nascimento</em>.</li>
+      </ul>
+
+      <h2>3.3 — Chaves: como identificar um registro sem confusão</h2>
+      <p>Numa turma de 40 alunos, pode existir mais de um "João Silva". Por isso, toda entidade precisa de um jeito de identificar cada registro de forma única — isso se chama <strong>chave</strong>.</p>
+      <ul>
+        <li><span class="term" tabindex="0" data-tip="Qualquer atributo (ou conjunto de atributos) que, sozinho, já seria suficiente para identificar um registro sem repetir.">Chave candidata</span>: qualquer atributo que poderia, sozinho, identificar o registro de forma única. Um aluno pode ter tanto o CPF quanto a matrícula como chaves candidatas.</li>
+        <li><span class="term" tabindex="0" data-tip="A chave candidata escolhida oficialmente para identificar os registros daquela tabela — cada tabela tem só uma.">Chave primária</span>: a chave candidata que escolhemos oficialmente para representar o registro. Geralmente é um código simples, como <em>id_aluno</em>.</li>
+        <li><span class="term" tabindex="0" data-tip="Um campo que guarda a chave primária de OUTRA tabela, criando a ligação entre as duas.">Chave estrangeira</span>: um campo que "empresta" a chave primária de outra entidade, criando a conexão entre as duas. É assim que um Empréstimo sabe a qual Bicicleta ele se refere.</li>
+      </ul>
+      <div class="box example">
+        <span class="box-tag">Exemplo</span>
+        <p>Na tabela <strong>Empréstimo</strong>, o campo <code>id_emprestimo</code> é a chave primária dela mesma. Os campos <code>id_bicicleta</code> e <code>id_cliente</code>, dentro dessa mesma tabela, são chaves estrangeiras — eles apontam para a chave primária das tabelas Bicicleta e Cliente.</p>
+      </div>
+
+      <h2>3.4 — Relacionamentos e seu grau</h2>
+      <p>Um <strong>relacionamento</strong> é a conexão entre duas (ou mais) entidades — no desenho, vira um losango ligando os retângulos. O <span class="term" tabindex="0" data-tip="A quantidade de entidades diferentes envolvidas num mesmo relacionamento.">grau do relacionamento</span> indica quantas entidades participam dele:</p>
+      <ul>
+        <li><strong>Unário</strong>: a entidade se relaciona com ela mesma. Ex.: um Funcionário é "supervisor" de outro Funcionário.</li>
+        <li><strong>Binário</strong>: o mais comum — duas entidades se relacionam. Ex.: Cliente <em>faz</em> Empréstimo.</li>
+        <li><strong>Ternário</strong>: três entidades participam do mesmo relacionamento. Ex.: um Professor <em>ministra</em> uma Disciplina em uma Turma.</li>
+      </ul>
+
+      <h2>3.5 — Cardinalidade: quantos para quantos?</h2>
+      <p>A <span class="term" tabindex="0" data-tip="A quantidade de vezes que um registro de uma entidade pode se relacionar com registros de outra entidade.">cardinalidade</span> é uma das partes mais importantes (e mais cobradas em prova!) do MER. Ela responde: "quantos registros de uma entidade podem se conectar a quantos registros de outra?"</p>
+      <div class="table-wrap">
+      <table class="data">
+        <thead><tr><th>Tipo</th><th>Descrição</th><th>Exemplo</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1:1</strong> (um para um)</td><td>Um registro de A se relaciona com no máximo um registro de B, e vice-versa.</td><td>Uma Pessoa tem um Passaporte; um Passaporte pertence a uma Pessoa.</td></tr>
+          <tr><td><strong>1:N</strong> (um para muitos)</td><td>Um registro de A pode se relacionar com vários registros de B, mas cada B se liga a apenas um A.</td><td>Um Cliente pode ter vários Empréstimos; cada Empréstimo pertence a um único Cliente.</td></tr>
+          <tr><td><strong>N:N</strong> (muitos para muitos)</td><td>Vários registros de A se relacionam com vários registros de B.</td><td>Um Aluno pode cursar várias Disciplinas; cada Disciplina tem vários Alunos.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="box alert">
+        <span class="box-tag">Fica de olho</span>
+        <p>Relacionamentos N:N não podem ser implementados diretamente numa tabela — eles exigem a criação de uma <strong>tabela associativa</strong> (também chamada de tabela de junção) para funcionar no banco físico. Vamos ver isso na prática mais adiante no curso.</p>
+      </div>
+
+      <h2>3.6 — Entidades fortes e fracas</h2>
+      <p>Uma <strong>entidade forte</strong> existe por conta própria e tem sua própria chave primária (ex.: Cliente). Uma <span class="term" tabindex="0" data-tip="Uma entidade que só existe se estiver ligada a outra entidade — não tem identidade própria sem essa ligação.">entidade fraca</span> só existe se estiver associada a uma entidade forte — ela depende da outra para "fazer sentido". Ex.: os <em>Dependentes</em> de um funcionário só existem no sistema porque o Funcionário existe; se o Funcionário for removido, os Dependentes dele também deixam de fazer sentido.</p>
+
+      <h2>3.7 — Mini estudo de caso: sistema de biblioteca</h2>
+      <p>Vamos aplicar tudo o que vimos num exemplo completo. Imagine que a biblioteca da escola pediu um sistema simples de empréstimo de livros. Levantamos as seguintes entidades e relacionamentos:</p>
+      <div class="box example">
+        <span class="box-tag">Estudo de caso</span>
+        <p><strong>Entidades:</strong> Livro (id_livro, título, autor), Aluno (id_aluno, nome, turma), Empréstimo (id_emprestimo, data_emprestimo, data_devolucao).</p>
+        <p><strong>Relacionamento:</strong> um Aluno <em>realiza</em> vários Empréstimos (1:N), e um Empréstimo se refere a um único Livro por vez (1:N entre Livro e Empréstimo).</p>
+        <p><strong>Chaves estrangeiras:</strong> a tabela Empréstimo carrega <code>id_aluno</code> e <code>id_livro</code> como chaves estrangeiras.</p>
+      </div>
+
+      <h2>Prática guiada — desenhe você mesmo</h2>
+      <p>Pegue papel e caneta (ou o software de modelagem que preferir) e desenhe o MER completo do sistema de biblioteca acima, incluindo entidades, atributos, chaves e a cardinalidade de cada relacionamento. Isso será revisado como prática da Aula 3 antes de seguirmos para a Aula 4.</p>
+    </div>
+
+    <div class="sheet exsheet">
+      <p class="eyebrow">Sala de exercícios — Aula 3</p>
+      <h2 style="margin-top:0; padding-top:0; border-top:none;">Fixando o conteúdo</h2>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">1</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Múltipla escolha</span>
+            <p>O campo que "empresta" a chave primária de outra tabela para criar uma ligação entre elas é chamado de:</p>
+            <ul class="ex-options">
+              <li>Chave candidata</li>
+              <li>Chave primária</li>
+              <li>Chave estrangeira</li>
+              <li>Atributo derivado</li>
+            </ul>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">Chave estrangeira.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">2</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Identifique a cardinalidade</span>
+            <p>Para cada par de entidades, indique se a cardinalidade é 1:1, 1:N ou N:N:</p>
+            <p>( &nbsp;&nbsp; ) Pessoa e CPF</p>
+            <p>( &nbsp;&nbsp; ) Autor e Livro (um autor pode escrever vários livros; um livro, nesse sistema, tem só um autor)</p>
+            <p>( &nbsp;&nbsp; ) Ator e Filme (um ator atua em vários filmes; um filme tem vários atores)</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">1:1 — 1:N — N:N.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">3</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Classifique o atributo</span>
+            <p>Classifique cada atributo abaixo como simples, composto, multivalorado ou derivado:</p>
+            <p>( &nbsp;&nbsp; ) Telefones de contato de um Cliente (pode ter mais de um)</p>
+            <p>( &nbsp;&nbsp; ) Endereço, dividido em rua/número/bairro</p>
+            <p>( &nbsp;&nbsp; ) Tempo de casa de um funcionário, calculado a partir da data de admissão</p>
+            <p>( &nbsp;&nbsp; ) CPF</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">Multivalorado — Composto — Derivado — Simples.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">4</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Estudo de caso — pratique o MER</span>
+            <p>Uma locadora de filmes quer um sistema com as entidades <strong>Filme</strong>, <strong>Cliente</strong> e <strong>Aluguel</strong>. Um cliente pode alugar vários filmes ao longo do tempo, e um filme pode ser alugado várias vezes (por clientes diferentes, em datas diferentes). Desenhe (no papel) as três entidades com pelo menos 3 atributos cada, aponte a chave primária de cada uma, e diga qual(is) tabela(s) vai(vão) precisar de chave estrangeira.</p>
+            <details class="gab"><summary>Ver um exemplo de resposta</summary><div class="gab-content">Filme (id_filme PK, título, gênero) — Cliente (id_cliente PK, nome, telefone) — Aluguel (id_aluguel PK, data_aluguel, data_devolucao, id_filme FK, id_cliente FK). A tabela Aluguel é quem carrega as duas chaves estrangeiras, pois é ela que liga Cliente a Filme.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">5</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Verdadeiro ou falso</span>
+            <p>( &nbsp;&nbsp; ) Uma entidade fraca pode existir no banco mesmo sem nenhuma ligação com uma entidade forte.</p>
+            <p>( &nbsp;&nbsp; ) Um relacionamento ternário envolve exatamente três entidades diferentes.</p>
+            <p>( &nbsp;&nbsp; ) Relacionamentos N:N podem ser implementados sem nenhuma tabela extra.</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">F — V — F. Entidades fracas dependem de uma entidade forte para fazer sentido; relacionamentos N:N exigem uma tabela associativa.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="prevnext">
+        <button onclick="goTo('aula2')">&larr; Aula 2 — Modelagem Conceitual</button>
+        <button onclick="goTo('aula4')">Ir para Aula 4 — Normalização &rarr;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AULA 4 ============ -->
+  <section class="page" id="page-aula4">
+    <div class="sheet">
+      <p class="eyebrow">Prancha 04 / 04 — Bloco 1</p>
+      <h1>Aula 4 — Normalização</h1>
+      <p class="lede">Fechando o Bloco 1: agora que sabemos desenhar entidades e relacionamentos, precisamos garantir que as tabelas resultantes sejam "saudáveis" — sem repetição desnecessária de dados e sem armadilhas escondidas. Esse processo de organização se chama <strong>normalização</strong>.</p>
+
+      <div class="figure">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Database_normalization.svg?width=500" alt="Diagrama esquemático dos níveis de normalização de banco de dados">
+        <figcaption>Representação esquemática dos níveis (formas normais) de normalização — cada nível "encaixado" no anterior. Fonte: Wikimedia Commons.</figcaption>
+      </div>
+
+      <h2>4.1 — O problema da redundância</h2>
+      <p>Imagine a tabela abaixo, construída "no impulso", sem nenhuma modelagem prévia — um erro clássico de quem pula direto para o SQL sem passar pela Aula 2 e pela Aula 3:</p>
+      <div class="table-wrap">
+      <table class="data">
+        <thead><tr><th>id_pedido</th><th>cliente</th><th>telefone_cliente</th><th>produto</th><th>preço</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Ana Souza</td><td>51 9999-0001</td><td>Mouse</td><td>45,00</td></tr>
+          <tr><td>2</td><td>Ana Souza</td><td>51 9999-0001</td><td>Teclado</td><td>120,00</td></tr>
+          <tr><td>3</td><td>Ana Souza</td><td>51 9999-0001</td><td>Monitor</td><td>800,00</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>Repare no problema: o nome e o telefone da Ana estão <span class="term" tabindex="0" data-tip="A mesma informação guardada várias vezes, sem necessidade — desperdiça espaço e é fonte de erros.">redundantes</span> — repetidos em toda linha. Se o telefone da Ana mudar, alguém vai precisar atualizar as três linhas. E se esquecer uma? O banco fica com dados contraditórios.</p>
+
+      <h2>4.2 — Dependência funcional: a base da normalização</h2>
+      <p>Dizemos que existe uma <span class="term" tabindex="0" data-tip="Quando o valor de um campo é totalmente determinado pelo valor de outro campo. Se eu sei o CPF, eu sei o nome — o nome 'depende' do CPF.">dependência funcional</span> quando, sabendo o valor de um atributo, conseguimos determinar o valor de outro. No exemplo acima, o <code>telefone_cliente</code> depende do <code>cliente</code> — não do pedido. É essa dependência "no lugar errado" que gera a redundância.</p>
+
+      <h2>4.3 — As três anomalias</h2>
+      <p>Tabelas mal normalizadas sofrem de três tipos de problema, conhecidos como <strong>anomalias</strong>:</p>
+      <ul>
+        <li><span class="term" tabindex="0" data-tip="Problema que acontece ao tentar inserir um novo dado, mas você é obrigado a repetir informação que já existe em outro lugar.">Anomalia de inserção</span>: para cadastrar um cliente novo que ainda não comprou nada, você não tem "onde" colocá-lo, porque a tabela só existe atrelada a pedidos.</li>
+        <li><span class="term" tabindex="0" data-tip="Problema em que, ao atualizar um dado repetido, é preciso lembrar de mudar em todos os lugares onde ele aparece — senão o banco fica contraditório.">Anomalia de atualização</span>: mudar o telefone da Ana exige atualizar três linhas — esquecer uma gera inconsistência.</li>
+        <li><span class="term" tabindex="0" data-tip="Problema em que, ao apagar um registro, você acaba apagando junto uma informação que ainda era importante, só porque ela estava 'grudada' no registro errado.">Anomalia de exclusão</span>: se a Ana cancelar o único pedido dela (id 1), e essa linha for apagada, perdemos o telefone dela junto — mesmo que ela continue sendo cliente.</li>
+      </ul>
+
+      <h2>4.4 — Primeira Forma Normal (1FN)</h2>
+      <p>Uma tabela está na <span class="term" tabindex="0" data-tip="Regra que exige que cada campo guarde um único valor — nunca uma lista de valores dentro da mesma célula.">Primeira Forma Normal</span> quando cada célula guarda um único valor (nada de "listas dentro da célula") e não existem grupos de colunas repetidas.</p>
+      <div class="box alert">
+        <span class="box-tag">Antes (viola a 1FN)</span>
+        <p><code>telefones: "51 9999-0001, 51 9999-0002"</code> — dois telefones espremidos numa célula só.</p>
+      </div>
+      <div class="box example">
+        <span class="box-tag">Depois (respeitando a 1FN)</span>
+        <p>Cria-se uma tabela separada <strong>Telefone</strong> (id_telefone, id_cliente, numero), com uma linha para cada telefone. Assim cada célula guarda um único valor, e um cliente pode ter quantos telefones precisar.</p>
+      </div>
+
+      <h2>4.5 — Segunda Forma Normal (2FN)</h2>
+      <p>Para estar na <span class="term" tabindex="0" data-tip="Regra que exige que todo campo dependa da chave primária inteira — não só de uma parte dela.">Segunda Forma Normal</span>, a tabela precisa, primeiro, já estar na 1FN. Além disso, todo atributo precisa depender da <strong>chave primária inteira</strong> — não apenas de parte dela. Esse problema só aparece quando a chave primária é composta por mais de um campo.</p>
+      <div class="box example">
+        <span class="box-tag">Exemplo</span>
+        <p>Imagine uma tabela com chave composta (id_pedido, id_produto) guardando também o <code>nome_produto</code>. O <code>nome_produto</code> depende só de <code>id_produto</code>, não do <code>id_pedido</code> — ou seja, depende de parte da chave, não da chave inteira. Isso viola a 2FN. A solução é mover <code>nome_produto</code> para uma tabela <strong>Produto</strong> separada.</p>
+      </div>
+
+      <h2>4.6 — Terceira Forma Normal (3FN)</h2>
+      <p>Para estar na <span class="term" tabindex="0" data-tip="Regra que exige que nenhum campo dependa de outro campo que não seja a chave primária.">Terceira Forma Normal</span>, a tabela precisa já estar na 2FN, e nenhum atributo pode depender de outro atributo que não seja a chave — isso se chama <span class="term" tabindex="0" data-tip="Quando um campo depende de outro campo comum (não-chave), que por sua vez depende da chave — uma dependência 'em cadeia'.">dependência transitiva</span>.</p>
+      <div class="box example">
+        <span class="box-tag">Exemplo</span>
+        <p>Numa tabela Aluno (id_aluno, nome, id_cidade, nome_cidade), o campo <code>nome_cidade</code> depende de <code>id_cidade</code>, que por sua vez depende de <code>id_aluno</code> — uma dependência em cadeia. Isso viola a 3FN. A solução é criar uma tabela <strong>Cidade</strong> separada (id_cidade, nome_cidade), e a tabela Aluno guarda só a chave estrangeira <code>id_cidade</code>.</p>
+      </div>
+
+      <h2>4.7 — Resultado final: a tabela do pedido, normalizada</h2>
+      <p>Aplicando as três formas normais no nosso exemplo inicial, chegamos a três tabelas enxutas e sem redundância:</p>
+      <div class="table-wrap">
+      <table class="data">
+        <thead><tr><th>Cliente</th><th></th><th>Pedido</th><th></th><th>Produto</th></tr></thead>
+        <tbody>
+          <tr><td>id_cliente, nome, telefone</td><td></td><td>id_pedido, id_cliente (FK), id_produto (FK)</td><td></td><td>id_produto, nome, preço</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>Agora, se o telefone da Ana mudar, atualiza-se em um único lugar. Se ela cancelar um pedido, o cadastro dela como cliente continua intacto. É essa robustez que a normalização entrega.</p>
+
+      <h2>Nota rápida sobre "desnormalizar"</h2>
+      <p>Em sistemas com altíssimo volume de leitura, às vezes engenheiros optam por <strong>desnormalizar</strong> propositalmente parte do banco (reintroduzir alguma redundância controlada) para ganhar velocidade de consulta. Isso é um assunto avançado — por enquanto, o mais importante é dominar bem a normalização "pelo livro" antes de aprender quando quebrar a regra.</p>
+    </div>
+
+    <div class="sheet exsheet">
+      <p class="eyebrow">Sala de exercícios — Aula 4</p>
+      <h2 style="margin-top:0; padding-top:0; border-top:none;">Fixando o conteúdo</h2>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">1</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Múltipla escolha</span>
+            <p>Uma tabela em que uma célula guarda "SP, RJ, MG" (vários estados numa célula só) viola qual forma normal?</p>
+            <ul class="ex-options">
+              <li>Primeira Forma Normal (1FN)</li>
+              <li>Segunda Forma Normal (2FN)</li>
+              <li>Terceira Forma Normal (3FN)</li>
+              <li>Nenhuma — isso é permitido</li>
+            </ul>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">Primeira Forma Normal (1FN) — cada célula deve guardar um único valor.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">2</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Associe as colunas</span>
+            <p>(A) Anomalia de inserção &nbsp;&nbsp; (B) Anomalia de atualização &nbsp;&nbsp; (C) Anomalia de exclusão</p>
+            <p>( &nbsp;&nbsp; ) Ao apagar o único pedido de um cliente, perde-se o cadastro dele por tabela.</p>
+            <p>( &nbsp;&nbsp; ) Mudar um dado repetido exige alterar várias linhas — esquecer uma gera inconsistência.</p>
+            <p>( &nbsp;&nbsp; ) Não é possível cadastrar um cliente novo que ainda não fez nenhum pedido.</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">C — B — A.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">3</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Normalize a tabela</span>
+            <p>A tabela abaixo está toda "espremida" numa única tabela. Identifique quais campos deveriam sair dela e formar tabelas próprias, e diga o motivo (1FN, 2FN ou 3FN).</p>
+            <div class="table-wrap">
+            <table class="data">
+              <thead><tr><th>id_matricula</th><th>aluno</th><th>id_curso</th><th>nome_curso</th><th>carga_horaria_curso</th></tr></thead>
+              <tbody><tr><td>1</td><td>Bruno</td><td>10</td><td>UC3</td><td>84</td></tr></tbody>
+            </table>
+            </div>
+            <details class="gab"><summary>Ver um exemplo de resposta</summary><div class="gab-content">Os campos <code>nome_curso</code> e <code>carga_horaria_curso</code> dependem de <code>id_curso</code>, não de <code>id_matricula</code> — isso é uma dependência transitiva, violando a 3FN. A solução é criar uma tabela <strong>Curso</strong> (id_curso, nome_curso, carga_horaria_curso) separada, e a tabela Matrícula fica só com id_matricula, aluno e id_curso (FK).</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">4</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Verdadeiro ou falso</span>
+            <p>( &nbsp;&nbsp; ) Para estar na 3FN, uma tabela precisa antes estar na 2FN.</p>
+            <p>( &nbsp;&nbsp; ) Desnormalizar significa aplicar a normalização duas vezes seguidas.</p>
+            <p>( &nbsp;&nbsp; ) A dependência funcional é a base teórica por trás de todas as formas normais.</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">V — F — V. Desnormalizar é o oposto: reintroduzir redundância de propósito, geralmente por performance.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">5</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Dissertativa</span>
+            <p>Explique por que a normalização é importante mesmo em um projeto pequeno, e cite pelo menos uma situação em que "desnormalizar" pode fazer sentido.</p>
+            <details class="gab"><summary>Ver um exemplo de resposta</summary><div class="gab-content">Resposta livre. Um bom texto cita que a normalização evita inconsistência de dados e retrabalho, mesmo em bancos pequenos, e reconhece que a desnormalização pode ser útil em sistemas com leitura intensa e pouca escrita, onde performance de consulta importa mais do que economizar espaço.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">6</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Revisão do Bloco 1</span>
+            <p>Amarre as quatro aulas: explique, em um parágrafo curto, todo o caminho que percorremos desde "conversar com o cliente" (Aula 2) até "ter uma tabela pronta e bem organizada" (Aula 4), passando pelo desenho do MER (Aula 3).</p>
+            <details class="gab"><summary>Ver um exemplo de resposta</summary><div class="gab-content">Resposta livre. Espera-se algo como: primeiro entendemos o que é dado/informação e escolhemos entre relacional e não-relacional (Aula 1); depois levantamos requisitos com o cliente e documentamos no dicionário de dados (Aula 2); em seguida desenhamos as entidades, atributos e relacionamentos no MER (Aula 3); por fim, aplicamos a normalização para garantir que as tabelas resultantes não tenham redundância nem anomalias (Aula 4).</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="prevnext">
+        <button onclick="goTo('aula3')">&larr; Aula 3 — MER</button>
+        <button onclick="goTo('home')">Voltar ao Índice &rarr;</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="stamp">
+  <span>UC3 · PLANEJAR E ADMINISTRAR BANCO DE DADOS</span>
+  <span>BLOCO 1 — PRANCHAS 01–04 · TÉCNICO EM DESENVOLVIMENTO DE SISTEMAS</span>
+</footer>
+
+<script>
+  function goTo(id){
+    document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+    document.getElementById('page-' + id).classList.add('active');
+    document.querySelectorAll('nav.tabs button').forEach(function(b){ b.classList.remove('active'); });
+    document.querySelector('nav.tabs button[data-page="' + id + '"]').classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  document.querySelectorAll('nav.tabs button').forEach(function(btn){
+    btn.addEventListener('click', function(){ goTo(btn.getAttribute('data-page')); });
+  });
+</script>
+
+</body>
+</html>

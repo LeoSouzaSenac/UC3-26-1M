@@ -274,7 +274,7 @@
       <div class="brand">UC3 · Planejar e Administrar Banco de Dados
         <small>TÉCNICO EM DESENVOLVIMENTO DE SISTEMAS — SENAC RS</small>
       </div>
-      <div class="ruler-meta">BLOCO 1 · FUNDAMENTOS<br>PRANCHAS 01–04</div>
+      <div class="ruler-meta">BLOCO 1 · FUNDAMENTOS<br>PRANCHAS 01–05</div>
     </div>
     <nav class="tabs" id="tabs">
       <button data-page="home" class="active"><span class="num">00</span>HOME</button>
@@ -282,6 +282,7 @@
       <button data-page="aula2"><span class="num">02</span>MODELAGEM CONCEITUAL</button>
       <button data-page="aula3"><span class="num">03</span>MODELO ENTIDADE-RELACIONAMENTO</button>
       <button data-page="aula4"><span class="num">04</span>NORMALIZAÇÃO</button>
+      <button data-page="aula5"><span class="num">05</span>MODELO LÓGICO</button>
     </nav>
   </div>
 </div>
@@ -322,6 +323,12 @@
           <span class="card-n">PRANCHA 04</span>
           <h4>Normalização</h4>
           <p>Como organizar tabelas para eliminar redundância e evitar dor de cabeça futura.</p>
+          <span class="card-hrs">≈ 4h de estudo</span>
+        </div>
+        <div class="card" onclick="goTo('aula5')">
+          <span class="card-n">PRANCHA 05</span>
+          <h4>Modelo Lógico</h4>
+          <p>Traduzindo o MER em tabelas de verdade: tipos de dado, chaves e o MySQL Workbench.</p>
           <span class="card-hrs">≈ 4h de estudo</span>
         </div>
       </div>
@@ -982,6 +989,214 @@
 
       <div class="prevnext">
         <button onclick="goTo('aula3')">&larr; Aula 3 — MER</button>
+        <button onclick="goTo('aula5')">Ir para Aula 5 — Modelo Lógico &rarr;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AULA 5 ============ -->
+  <section class="page" id="page-aula5">
+    <div class="sheet">
+      <p class="eyebrow">Prancha 05 / 05 — Bloco 1</p>
+      <h1>Aula 5 — Modelo Lógico</h1>
+      <p class="lede">Esta é a aula-ponte: pegamos o MER desenhado na Aula 3, já limpo pela normalização da Aula 4, e o traduzimos para uma linguagem que qualquer <span class="term" tabindex="0" data-tip="Sigla para Sistema Gerenciador de Banco de Dados: o programa que organiza, protege e permite consultar o banco de dados.">SGBD</span> entende: tabelas, colunas, tipos de dado e restrições. A partir daqui você já pensa "de olho" no <strong>MySQL Workbench</strong>, a ferramenta que vamos usar no laboratório.</p>
+
+      <div class="figure">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Relational_Model.svg?width=700" alt="Esquema do modelo relacional com tabelas e chaves">
+        <figcaption>O modelo relacional: dados organizados em tabelas (relações), cada uma com colunas tipadas e uma chave que a identifica. É exatamente isso que o modelo lógico formaliza. Fonte: Wikimedia Commons.</figcaption>
+      </div>
+
+      <h2>5.1 — Onde estamos: conceitual → lógico → físico</h2>
+      <p>Vale relembrar rapidinho os três níveis de modelagem que citamos lá na Aula 2:</p>
+      <ul>
+        <li><strong>Modelo conceitual</strong> (Aulas 2 e 3): entidades, atributos e relacionamentos, sem se importar com qual SGBD será usado. É o "o quê".</li>
+        <li><strong>Modelo lógico</strong> (esta aula): já pensa em tabelas, colunas, tipos de dado e chaves — mas ainda de forma <span class="term" tabindex="0" data-tip="Que não depende de um fabricante específico — os conceitos valem tanto para MySQL quanto para PostgreSQL, Oracle, SQL Server etc.">independente de fabricante</span>. É o "como, em teoria".</li>
+        <li><strong>Modelo físico</strong> (próximas aulas, com DDL): o banco realmente criado dentro de um SGBD específico, com sintaxe exata daquele produto. É o "como, na prática".</li>
+      </ul>
+      <div class="box analogy">
+        <span class="box-tag">Analogia</span>
+        <p>Se o modelo conceitual é o <strong>esboço</strong> de um móvel feito à mão livre, o modelo lógico é o <strong>desenho técnico com medidas</strong> — já sabemos a largura de cada gaveta, mas ainda não escolhemos se o móvel vai ser fabricado em MDF ou madeira maciça. Essa escolha do "material" (o SGBD específico) é o modelo físico.</p>
+      </div>
+
+      <h2>5.2 — Traduzindo entidades e atributos em tabelas e colunas</h2>
+      <p>A tradução do MER para o modelo lógico segue algumas regras bem diretas:</p>
+      <ul>
+        <li>Toda <strong>entidade</strong> vira uma <strong>tabela</strong>.</li>
+        <li>Todo <strong>atributo simples</strong> vira uma <strong>coluna</strong> daquela tabela.</li>
+        <li>Todo <span class="term" tabindex="0" data-tip="Atributo que pode ser 'quebrado' em partes menores com significado próprio.">atributo composto</span> é "achatado": em vez de uma coluna <code>endereço</code>, criam-se colunas separadas <code>rua</code>, <code>numero</code>, <code>cidade</code>.</li>
+        <li>Todo <span class="term" tabindex="0" data-tip="Atributo que pode ter mais de um valor ao mesmo tempo para a mesma entidade.">atributo multivalorado</span> vira uma <strong>tabela própria</strong>, ligada à tabela original por chave estrangeira (é exatamente o que fizemos com os telefones do cliente na Aula 4).</li>
+        <li><strong>Atributos derivados</strong> normalmente <em>não</em> viram coluna — calculamos na hora da consulta, para não guardar um dado que pode ficar desatualizado.</li>
+      </ul>
+
+      <h2>5.3 — Traduzindo relacionamentos e cardinalidade</h2>
+      <p>Cada tipo de cardinalidade que vimos na Aula 3 se traduz de um jeito diferente:</p>
+      <div class="table-wrap">
+      <table class="data">
+        <thead><tr><th>Cardinalidade</th><th>Como vira tabela</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1:1</strong></td><td>A chave primária de uma das tabelas é repetida como chave estrangeira <em>única</em> na outra — ou, em muitos casos, as duas entidades são fundidas numa tabela só.</td></tr>
+          <tr><td><strong>1:N</strong></td><td>A chave primária do lado "1" vira chave estrangeira na tabela do lado "N". Foi o que fizemos com Cliente (1) e Empréstimo (N).</td></tr>
+          <tr><td><strong>N:N</strong></td><td>Cria-se uma <span class="term" tabindex="0" data-tip="Uma tabela extra, criada só para representar um relacionamento N:N, carregando as chaves estrangeiras das duas tabelas originais.">tabela associativa</span> nova, contendo as chaves estrangeiras das duas tabelas envolvidas (e, se precisar, atributos próprios do relacionamento, como "data_matricula").</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="box example">
+        <span class="box-tag">Exemplo — N:N virando tabela</span>
+        <p>Lembra do relacionamento Aluno–Disciplina (N:N) da Aula 3? No modelo lógico ele vira a tabela <code>Matricula</code>: <code>id_matricula (PK), id_aluno (FK), id_disciplina (FK), data_matricula</code>. Cada linha representa "este aluno está matriculado nesta disciplina".</p>
+      </div>
+
+      <h2>5.4 — Chaves e restrições (constraints)</h2>
+      <p>No modelo lógico já formalizamos as regras que o banco vai obrigar sozinho, sem depender da aplicação para "lembrar" de validar. Essas regras se chamam <span class="term" tabindex="0" data-tip="Uma regra que o próprio banco de dados obriga automaticamente — impede que um dado inválido seja salvo.">constraints</span> (restrições):</p>
+      <ul>
+        <li><code>PRIMARY KEY</code> — marca a chave primária da tabela.</li>
+        <li><code>FOREIGN KEY</code> — marca uma coluna como chave estrangeira, amarrada a outra tabela.</li>
+        <li><code>NOT NULL</code> — obriga que aquela coluna sempre tenha um valor preenchido.</li>
+        <li><code>UNIQUE</code> — garante que aquele valor nunca se repete entre as linhas (ex.: e-mail de login).</li>
+        <li><code>DEFAULT</code> — define um valor automático quando nada é informado (ex.: <code>status DEFAULT 'ativo'</code>).</li>
+        <li><code>CHECK</code> — valida uma condição customizada (ex.: <code>preco > 0</code>).</li>
+      </ul>
+
+      <h2>5.5 — Tabela de tipos de dados do SQL (MySQL)</h2>
+      <p>Como vamos trabalhar no <strong>MySQL Workbench</strong>, essa é a tabela de referência de tipos que você vai usar toda vez que criar uma coluna — cole ela no seu caderno, porque ela volta com tudo na Aula 6 (DDL):</p>
+      <div class="table-wrap">
+      <table class="data">
+        <thead><tr><th>Categoria</th><th>Tipo</th><th>Guarda</th><th>Quando usar</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="5">Numéricos</td><td><code>TINYINT</code></td><td>Inteiro pequeno (-128 a 127, ou 0–255 sem sinal)</td><td>Flags, idades, quantidades pequenas</td></tr>
+          <tr><td><code>SMALLINT</code></td><td>Inteiro médio (até ~32 mil)</td><td>Quantidades um pouco maiores</td></tr>
+          <tr><td><code>INT</code> / <code>INTEGER</code></td><td>Inteiro padrão (até ~2,1 bilhões)</td><td>IDs, contadores — o mais usado no dia a dia</td></tr>
+          <tr><td><code>BIGINT</code></td><td>Inteiro grande</td><td>IDs de tabelas gigantes, contadores muito altos</td></tr>
+          <tr><td><code>DECIMAL(p,s)</code></td><td>Número exato com casas decimais fixas</td><td>Dinheiro! (ex.: <code>DECIMAL(10,2)</code> — nunca use FLOAT para valores monetários)</td></tr>
+          <tr><td rowspan="3">Texto</td><td><code>CHAR(n)</code></td><td>Texto de tamanho fixo</td><td>Campos sempre do mesmo tamanho, como UF (2 letras) ou CEP</td></tr>
+          <tr><td><code>VARCHAR(n)</code></td><td>Texto de tamanho variável, até n caracteres</td><td>Nomes, e-mails, títulos — o mais usado para texto curto</td></tr>
+          <tr><td><code>TEXT</code></td><td>Texto longo, sem limite prático</td><td>Descrições, comentários, corpo de um post</td></tr>
+          <tr><td rowspan="5">Data e hora</td><td><code>DATE</code></td><td>Só a data (AAAA-MM-DD)</td><td>Data de nascimento, data de matrícula</td></tr>
+          <tr><td><code>TIME</code></td><td>Só a hora (HH:MM:SS)</td><td>Horário de um evento recorrente</td></tr>
+          <tr><td><code>DATETIME</code></td><td>Data e hora juntas</td><td>Data e hora exatas de um pedido, de um login</td></tr>
+          <tr><td><code>TIMESTAMP</code></td><td>Data e hora, com atualização automática possível</td><td>"Criado em" / "atualizado em" de um registro</td></tr>
+          <tr><td><code>YEAR</code></td><td>Só o ano</td><td>Ano de fabricação, ano letivo</td></tr>
+          <tr><td rowspan="3">Outros</td><td><code>BOOLEAN</code> (na prática, <code>TINYINT(1)</code>)</td><td>Verdadeiro/falso (0 ou 1)</td><td>Ativo/inativo, pago/não pago</td></tr>
+          <tr><td><code>ENUM('a','b',...)</code></td><td>Um valor dentro de uma lista fixa pré-definida</td><td>Status limitado, como "pendente/pago/cancelado"</td></tr>
+          <tr><td><code>BLOB</code></td><td>Dado binário (arquivo, imagem)</td><td>Guardar arquivos pequenos direto no banco (uso raro — geralmente é melhor guardar só o caminho do arquivo)</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="box alert">
+        <span class="box-tag">Fica de olho</span>
+        <p>Erro clássico de iniciante: usar <code>FLOAT</code> ou <code>DOUBLE</code> para guardar dinheiro. Como esses tipos guardam números aproximados, arredondamentos minúsculos podem gerar diferenças de centavos. Para qualquer valor monetário, use sempre <code>DECIMAL(p,s)</code>.</p>
+      </div>
+
+      <h2>5.6 — Convenções de nomenclatura</h2>
+      <p>Antes de sair criando tabelas no Workbench, combine um padrão com a equipe — isso evita um banco "poliglota" onde cada tabela segue uma regra diferente. Sugestão de convenção, que vamos seguir no curso:</p>
+      <ul>
+        <li>Nomes de tabela no <span class="term" tabindex="0" data-tip="Um jeito de escrever nomes compostos usando letras minúsculas e underline entre as palavras — assim: nome_da_coluna.">snake_case</span>, no singular: <code>cliente</code>, <code>pedido</code>, <code>item_pedido</code> (não <code>Clientes</code> nem <code>tblCliente</code>).</li>
+        <li>Chave primária sempre chamada <code>id</code>, ou <code>id_&lt;tabela&gt;</code> quando referenciada como chave estrangeira em outra tabela: <code>id_cliente</code>.</li>
+        <li>Tabelas associativas (N:N) recebem um nome que descreve a ação/relação: <code>matricula</code>, e não algo como <code>aluno_disciplina</code> — embora ambos funcionem, nomes descritivos ajudam a leitura.</li>
+      </ul>
+
+      <h2>5.7 — Conhecendo o MySQL Workbench</h2>
+      <p>O <strong>MySQL Workbench</strong> é a ferramenta oficial da Oracle/MySQL para modelar, criar e administrar bancos MySQL com interface visual. Três áreas que você vai usar bastante a partir de agora:</p>
+      <ul>
+        <li><strong>EER Diagram</strong> (<em>Enhanced Entity-Relationship</em>) — uma tela de desenho onde você monta visualmente as tabelas, colunas, tipos e relacionamentos (arrastando uma linha de uma tabela para outra, o Workbench já cria a chave estrangeira). É praticamente um MER com superpoderes.</li>
+        <li><strong>Forward Engineer</strong> — o botão que pega o diagrama que você desenhou e gera o SQL de criação (<code>CREATE TABLE</code>) automaticamente, criando o banco físico de verdade.</li>
+        <li><strong>SQL Editor</strong> — a tela onde, mais adiante no curso, vamos escrever comandos SQL na mão (DDL, DML, DQL).</li>
+      </ul>
+      <div class="box analogy">
+        <span class="box-tag">Analogia</span>
+        <p>Pense no EER Diagram do Workbench como uma prancheta digital: você desenha as tabelas como se estivesse desenhando o MER da Aula 3, só que já com tipos de dado e restrições configurados em cada coluna. Quando o desenho está pronto, um clique em <em>Forward Engineer</em> "constrói a obra": gera e executa o SQL que cria tudo de verdade no servidor.</p>
+      </div>
+
+      <h2>5.8 — Colocando em prática: a biblioteca, agora em modelo lógico</h2>
+      <p>Vamos retomar o estudo de caso da biblioteca (Aula 3) e traduzir o MER para o modelo lógico completo, já com tipos de dado prontos para o Workbench:</p>
+      <div class="box example">
+        <span class="box-tag">Modelo lógico — Biblioteca</span>
+        <p><code>Aluno</code>: id_aluno <strong>INT</strong> (PK), nome <strong>VARCHAR(100)</strong> NOT NULL, turma <strong>VARCHAR(20)</strong></p>
+        <p><code>Livro</code>: id_livro <strong>INT</strong> (PK), titulo <strong>VARCHAR(150)</strong> NOT NULL, autor <strong>VARCHAR(100)</strong></p>
+        <p><code>Emprestimo</code>: id_emprestimo <strong>INT</strong> (PK), id_aluno <strong>INT</strong> (FK), id_livro <strong>INT</strong> (FK), data_emprestimo <strong>DATE</strong> NOT NULL, data_devolucao <strong>DATE</strong></p>
+      </div>
+      <p>Repare que já decidimos o tipo de cada coluna, já marcamos o que é obrigatório (<code>NOT NULL</code>) e já identificamos as chaves. É exatamente esse "pacote pronto" que você vai desenhar no EER Diagram do Workbench na próxima prática — e, na Aula 6, vamos transformar isso em comandos <code>CREATE TABLE</code> de verdade.</p>
+    </div>
+
+    <div class="sheet exsheet">
+      <p class="eyebrow">Sala de exercícios — Aula 5</p>
+      <h2 style="margin-top:0; padding-top:0; border-top:none;">Fixando o conteúdo</h2>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">1</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Múltipla escolha</span>
+            <p>Qual tipo de dado do MySQL é o mais indicado para guardar o preço de um produto?</p>
+            <ul class="ex-options">
+              <li>FLOAT</li>
+              <li>VARCHAR(10)</li>
+              <li>DECIMAL(10,2)</li>
+              <li>BOOLEAN</li>
+            </ul>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">DECIMAL(10,2) — tipo exato, sem os arredondamentos aproximados do FLOAT, ideal para valores monetários.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">2</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Associe o tipo certo</span>
+            <p>Associe cada informação ao tipo de dado mais adequado:</p>
+            <p>(A) VARCHAR(150) &nbsp;&nbsp; (B) DATE &nbsp;&nbsp; (C) INT &nbsp;&nbsp; (D) ENUM('pendente','pago','cancelado')</p>
+            <p>( &nbsp;&nbsp; ) Status de um pedido</p>
+            <p>( &nbsp;&nbsp; ) Título de um livro</p>
+            <p>( &nbsp;&nbsp; ) Data de nascimento de um aluno</p>
+            <p>( &nbsp;&nbsp; ) Quantidade de itens em um pedido</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">D — A — B — C.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">3</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Complete a frase</span>
+            <p>Um relacionamento N:N, ao ser traduzido para o modelo lógico, vira uma <span class="blank-line"></span> nova, contendo as <span class="blank-line"></span> das duas tabelas originais.</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">tabela associativa — chaves estrangeiras.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">4</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Verdadeiro ou falso</span>
+            <p>( &nbsp;&nbsp; ) O modelo lógico já é específico de um SGBD, com a sintaxe exata daquele produto.</p>
+            <p>( &nbsp;&nbsp; ) Atributos derivados geralmente não viram uma coluna no modelo lógico.</p>
+            <p>( &nbsp;&nbsp; ) A constraint NOT NULL impede que uma coluna fique vazia.</p>
+            <p>( &nbsp;&nbsp; ) No MySQL Workbench, o EER Diagram serve só para visualizar, sem gerar nenhum SQL.</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">F — V — V — F. O modelo lógico é independente de fabricante (quem é específico é o modelo físico); e o EER Diagram gera SQL de verdade através do Forward Engineer.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">5</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Prática — monte o modelo lógico</span>
+            <p>Pegue o MER da locadora de filmes que você desenhou na prática da Aula 3 (Filme, Cliente, Aluguel) e escreva o modelo lógico completo: cada tabela, suas colunas com os tipos de dado do MySQL, e a marcação de PK/FK em cada uma.</p>
+            <details class="gab"><summary>Ver um exemplo de resposta</summary><div class="gab-content">Filme: id_filme INT (PK), titulo VARCHAR(150) NOT NULL, genero VARCHAR(50). Cliente: id_cliente INT (PK), nome VARCHAR(100) NOT NULL, telefone VARCHAR(20). Aluguel: id_aluguel INT (PK), id_filme INT (FK), id_cliente INT (FK), data_aluguel DATE NOT NULL, data_devolucao DATE.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">6</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Dissertativa</span>
+            <p>Explique com suas palavras a diferença entre modelo lógico e modelo físico, e diga qual ferramenta do MySQL Workbench faz a ponte entre os dois.</p>
+            <details class="gab"><summary>Ver um exemplo de resposta</summary><div class="gab-content">O modelo lógico já define tabelas, colunas e tipos, mas de forma genérica (funciona "na teoria" em qualquer SGBD); o modelo físico é o banco realmente criado dentro de um SGBD específico, com a sintaxe exata dele. A ferramenta que faz a ponte é o Forward Engineer do MySQL Workbench, que gera e executa o SQL a partir do diagrama EER.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="prevnext">
+        <button onclick="goTo('aula4')">&larr; Aula 4 — Normalização</button>
         <button onclick="goTo('home')">Voltar ao Índice &rarr;</button>
       </div>
     </div>

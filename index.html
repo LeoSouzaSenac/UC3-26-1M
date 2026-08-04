@@ -274,7 +274,7 @@
       <div class="brand">UC3 · Planejar e Administrar Banco de Dados
         <small>TÉCNICO EM DESENVOLVIMENTO DE SISTEMAS — SENAC RS</small>
       </div>
-      <div class="ruler-meta">BLOCO 1 · FUNDAMENTOS<br>PRANCHAS 01–05</div>
+      <div class="ruler-meta">BLOCO 1–2 · FUNDAMENTOS + SQL NA PRÁTICA<br>PRANCHAS 01–08</div>
     </div>
     <nav class="tabs" id="tabs">
       <button data-page="home" class="active"><span class="num">00</span>HOME</button>
@@ -283,6 +283,9 @@
       <button data-page="aula3"><span class="num">03</span>MODELO ENTIDADE-RELACIONAMENTO</button>
       <button data-page="aula4"><span class="num">04</span>NORMALIZAÇÃO</button>
       <button data-page="aula5"><span class="num">05</span>MODELO LÓGICO</button>
+      <button data-page="aula6"><span class="num">06</span>DDL</button>
+      <button data-page="aula7"><span class="num">07</span>DML</button>
+      <button data-page="aula8"><span class="num">08</span>DQL BÁSICO</button>
     </nav>
   </div>
 </div>
@@ -294,12 +297,12 @@
     <div class="sheet">
       <p class="eyebrow">Prancha 00 — Planta Geral</p>
       <h1>Bem-vindo(a) ao canteiro de obras do Banco de Dados</h1>
-      <p class="lede">Este portal cobre o <strong>Bloco 1</strong> da UC3: os fundamentos que sustentam tudo o que vem depois — SQL na veia, modelagem e normalização. Pense nele como a planta baixa de um prédio: antes de levantar paredes (tabelas) você precisa entender o terreno, desenhar a planta e calcular a estrutura.</p>
+      <p class="lede">Este portal cobre o <strong>Bloco 1</strong> (fundamentos e modelagem) e já entra no <strong>Bloco 2</strong> (SQL na prática) da UC3. Pense nele como a planta baixa de um prédio e, agora, a própria obra sendo erguida: primeiro desenhamos a estrutura, agora começamos a levantar as paredes de verdade, com comandos SQL rodando de fato no banco.</p>
       <p>Toda palavra técnica no site aparece <span class="term" tabindex="0" data-tip="Isso é só um exemplo — passe o mouse ou toque nos termos ao longo do texto para ver a tradução simples deles.">sublinhada e pontilhada</span> como esta. Passe o mouse (ou toque, no celular) para ver a explicação em português bem simples, sem economês.</p>
     </div>
 
     <div class="sheet">
-      <h2 style="margin-top:0; padding-top:0; border-top:none;">Índice do Bloco 1</h2>
+      <h2 style="margin-top:0; padding-top:0; border-top:none;">Índice do curso</h2>
       <div class="grid-cards">
         <div class="card" onclick="goTo('aula1')">
           <span class="card-n">PRANCHA 01</span>
@@ -331,6 +334,24 @@
           <p>Traduzindo o MER em tabelas de verdade: tipos de dado, chaves e o MySQL Workbench.</p>
           <span class="card-hrs">≈ 4h de estudo</span>
         </div>
+        <div class="card" onclick="goTo('aula6')">
+          <span class="card-n">PRANCHA 06</span>
+          <h4>DDL — Criando a Estrutura</h4>
+          <p>CREATE, ALTER, DROP e TRUNCATE: os comandos que constroem o banco de verdade.</p>
+          <span class="card-hrs">≈ 4h de estudo</span>
+        </div>
+        <div class="card" onclick="goTo('aula7')">
+          <span class="card-n">PRANCHA 07</span>
+          <h4>DML — Manipulando os Dados</h4>
+          <p>INSERT, UPDATE e DELETE: colocando, trocando e removendo informação nas tabelas.</p>
+          <span class="card-hrs">≈ 4h de estudo</span>
+        </div>
+        <div class="card" onclick="goTo('aula8')">
+          <span class="card-n">PRANCHA 08</span>
+          <h4>DQL Básico — Consultando Dados</h4>
+          <p>SELECT, WHERE, ORDER BY, LIMIT e funções de agregação (ainda sem JOIN).</p>
+          <span class="card-hrs">≈ 4h de estudo</span>
+        </div>
       </div>
     </div>
 
@@ -348,7 +369,7 @@
   <!-- ============ AULA 1 ============ -->
   <section class="page" id="page-aula1">
     <div class="sheet">
-      <p class="eyebrow">Prancha 01 / 04 — Bloco 1</p>
+      <p class="eyebrow">Prancha 01 / 08 — Bloco 1</p>
       <h1>Aula 1 — Introdução a Banco de Dados</h1>
       <p class="lede">Antes de escrever a primeira linha de <span class="term" tabindex="0" data-tip="A linguagem que usamos para conversar com o banco de dados: pedir, guardar, mudar ou apagar informações.">SQL</span>, você precisa entender três coisas: o que é um dado, onde ele mora, e por que existe uma linguagem inteira só para cuidar dele. É isso que fazemos nesta aula.</p>
 
@@ -358,7 +379,7 @@
       </div>
 
       <h2>1.1 — Dado, informação e conhecimento não são a mesma coisa</h2>
-      <p>É comum usar essas três palavras como sinônimas, mas em tecnologia da informação elas representam degraus diferentes de uma escada:</p>
+      <p>É comum usar essas três palavras como sinônimos, mas em tecnologia da informação elas representam degraus diferentes de uma escada:</p>
       <div class="box example">
         <span class="box-tag">Exemplo</span>
         <p><strong>Dado</strong> é solto e sem contexto: <code>28</code>. <strong>Informação</strong> é o dado organizado com significado: "a temperatura hoje é 28°C". <strong>Conhecimento</strong> é o que você faz com essa informação: "28°C é quente, vou levar uma roupa mais leve".</p>
@@ -530,7 +551,7 @@
   <!-- ============ AULA 2 ============ -->
   <section class="page" id="page-aula2">
     <div class="sheet">
-      <p class="eyebrow">Prancha 02 / 04 — Bloco 1</p>
+      <p class="eyebrow">Prancha 02 / 08 — Bloco 1</p>
       <h1>Aula 2 — Modelagem Conceitual do Banco de Dados</h1>
       <p class="lede">Nenhum engenheiro começa a construir um prédio sem antes desenhar a planta. Nesta aula, aprendemos a "plantar" um banco de dados no papel — entender o que o cliente precisa, documentar isso e preparar o terreno para o desenho do <span class="term" tabindex="0" data-tip="Modelo Entidade-Relacionamento: o 'mapa' visual de como as tabelas do banco vão se conectar. É o assunto da Aula 3.">MER</span>, que vem na próxima aula.</p>
 
@@ -590,7 +611,7 @@
         <span class="box-tag">Analogia</span>
         <p>Imagine a lista de alunos que fazem <strong>Inglês</strong> e a lista de alunos que fazem <strong>Robótica</strong>. A <strong>união</strong> das duas listas é "todo mundo que faz pelo menos uma das duas". A <strong>interseção</strong> é "quem faz as duas ao mesmo tempo". A <strong>diferença</strong> (Inglês menos Robótica) é "quem faz só Inglês".</p>
       </div>
-      <p>Guarde essa ideia — ela volta com tudo na Aula 8 do nosso curso, quando estudarmos <code>JOIN</code>s de verdade em SQL.</p>
+      <p>Guarde essa ideia — ela volta com tudo na Aula 9 do nosso curso, quando estudarmos <code>JOIN</code>s de verdade em SQL.</p>
 
       <h2>2.5 — Tipos de dados e domínio de um atributo</h2>
       <p>Cada informação que vamos guardar tem um <strong>tipo</strong> (número, texto, data...) e um <span class="term" tabindex="0" data-tip="O conjunto de valores válidos que um campo pode assumir. Exemplo: o domínio do campo 'nota' pode ser só números de 0 a 10.">domínio</span> — ou seja, os valores que ela pode legitimamente assumir. Definir o domínio ainda na modelagem conceitual evita bancos de dados "bagunçados" no futuro.</p>
@@ -674,7 +695,7 @@
   <!-- ============ AULA 3 ============ -->
   <section class="page" id="page-aula3">
     <div class="sheet">
-      <p class="eyebrow">Prancha 03 / 04 — Bloco 1</p>
+      <p class="eyebrow">Prancha 03 / 08 — Bloco 1</p>
       <h1>Aula 3 — Modelo Entidade-Relacionamento (MER)</h1>
       <p class="lede">Chegou a hora de transformar o dicionário de dados e os requisitos da Aula 2 em um <strong>desenho</strong>. O MER é o "mapa" visual do banco: mostra quais informações existem, como elas se agrupam e como se conectam — tudo isso antes de criar uma única tabela de verdade.</p>
 
@@ -831,7 +852,7 @@
   <!-- ============ AULA 4 ============ -->
   <section class="page" id="page-aula4">
     <div class="sheet">
-      <p class="eyebrow">Prancha 04 / 04 — Bloco 1</p>
+      <p class="eyebrow">Prancha 04 / 08 — Bloco 1</p>
       <h1>Aula 4 — Normalização</h1>
       <p class="lede">Fechando o Bloco 1: agora que sabemos desenhar entidades e relacionamentos, precisamos garantir que as tabelas resultantes sejam "saudáveis" — sem repetição desnecessária de dados e sem armadilhas escondidas. Esse processo de organização se chama <strong>normalização</strong>.</p>
 
@@ -997,7 +1018,7 @@
   <!-- ============ AULA 5 ============ -->
   <section class="page" id="page-aula5">
     <div class="sheet">
-      <p class="eyebrow">Prancha 05 / 05 — Bloco 1</p>
+      <p class="eyebrow">Prancha 05 / 08 — Bloco 1</p>
       <h1>Aula 5 — Modelo Lógico</h1>
       <p class="lede">Esta é a aula-ponte: pegamos o MER desenhado na Aula 3, já limpo pela normalização da Aula 4, e o traduzimos para uma linguagem que qualquer <span class="term" tabindex="0" data-tip="Sigla para Sistema Gerenciador de Banco de Dados: o programa que organiza, protege e permite consultar o banco de dados.">SGBD</span> entende: tabelas, colunas, tipos de dado e restrições. A partir daqui você já pensa "de olho" no <strong>MySQL Workbench</strong>, a ferramenta que vamos usar no laboratório.</p>
 
@@ -1011,7 +1032,7 @@
       <ul>
         <li><strong>Modelo conceitual</strong> (Aulas 2 e 3): entidades, atributos e relacionamentos, sem se importar com qual SGBD será usado. É o "o quê".</li>
         <li><strong>Modelo lógico</strong> (esta aula): já pensa em tabelas, colunas, tipos de dado e chaves — mas ainda de forma <span class="term" tabindex="0" data-tip="Que não depende de um fabricante específico — os conceitos valem tanto para MySQL quanto para PostgreSQL, Oracle, SQL Server etc.">independente de fabricante</span>. É o "como, em teoria".</li>
-        <li><strong>Modelo físico</strong> (próximas aulas, com DDL): o banco realmente criado dentro de um SGBD específico, com sintaxe exata daquele produto. É o "como, na prática".</li>
+        <li><strong>Modelo físico</strong> (Aula 6 em diante, com DDL): o banco realmente criado dentro de um SGBD específico, com sintaxe exata daquele produto. É o "como, na prática".</li>
       </ul>
       <div class="box analogy">
         <span class="box-tag">Analogia</span>
@@ -1099,7 +1120,7 @@
       <ul>
         <li><strong>EER Diagram</strong> (<em>Enhanced Entity-Relationship</em>) — uma tela de desenho onde você monta visualmente as tabelas, colunas, tipos e relacionamentos (arrastando uma linha de uma tabela para outra, o Workbench já cria a chave estrangeira). É praticamente um MER com superpoderes.</li>
         <li><strong>Forward Engineer</strong> — o botão que pega o diagrama que você desenhou e gera o SQL de criação (<code>CREATE TABLE</code>) automaticamente, criando o banco físico de verdade.</li>
-        <li><strong>SQL Editor</strong> — a tela onde, mais adiante no curso, vamos escrever comandos SQL na mão (DDL, DML, DQL).</li>
+        <li><strong>SQL Editor</strong> — a tela onde, a partir da Aula 6, vamos escrever comandos SQL na mão (DDL, DML, DQL).</li>
       </ul>
       <div class="box analogy">
         <span class="box-tag">Analogia</span>
@@ -1114,7 +1135,7 @@
         <p><code>Livro</code>: id_livro <strong>INT</strong> (PK), titulo <strong>VARCHAR(150)</strong> NOT NULL, autor <strong>VARCHAR(100)</strong></p>
         <p><code>Emprestimo</code>: id_emprestimo <strong>INT</strong> (PK), id_aluno <strong>INT</strong> (FK), id_livro <strong>INT</strong> (FK), data_emprestimo <strong>DATE</strong> NOT NULL, data_devolucao <strong>DATE</strong></p>
       </div>
-      <p>Repare que já decidimos o tipo de cada coluna, já marcamos o que é obrigatório (<code>NOT NULL</code>) e já identificamos as chaves. É exatamente esse "pacote pronto" que você vai desenhar no EER Diagram do Workbench na próxima prática — e, na Aula 6, vamos transformar isso em comandos <code>CREATE TABLE</code> de verdade.</p>
+      <p>Repare que já decidimos o tipo de cada coluna, já marcamos o que é obrigatório (<code>NOT NULL</code>) e já identificamos as chaves. É exatamente esse "pacote pronto" que vamos transformar em comandos <code>CREATE TABLE</code> de verdade já na próxima aula.</p>
     </div>
 
     <div class="sheet exsheet">
@@ -1197,6 +1218,627 @@
 
       <div class="prevnext">
         <button onclick="goTo('aula4')">&larr; Aula 4 — Normalização</button>
+        <button onclick="goTo('aula6')">Ir para Aula 6 — DDL &rarr;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AULA 6 ============ -->
+  <section class="page" id="page-aula6">
+    <div class="sheet">
+      <p class="eyebrow">Prancha 06 / 08 — Bloco 2</p>
+      <h1>Aula 6 — DDL: Criando a Estrutura do Banco</h1>
+      <p class="lede">Chegou a hora de sair do papel. Tudo que desenhamos no modelo lógico (Aula 5) agora vira comando SQL de verdade, rodando no MySQL Workbench. Nesta aula usamos a <span class="term" tabindex="0" data-tip="Data Definition Language: o grupo de comandos SQL que cria, altera e apaga a ESTRUTURA do banco (tabelas, colunas), sem se preocupar com o conteúdo delas.">DDL</span> — a "linguagem de construção" do banco.</p>
+
+      <div class="figure">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Brick_Wall_1_2017-06-14.jpg?width=900" alt="Parede de tijolos sendo erguida, fileira por fileira">
+        <figcaption>Assim como uma parede é erguida tijolo por tijolo, uma tabela é erguida coluna por coluna. É exatamente isso que o CREATE TABLE faz. Fonte: Wikimedia Commons.</figcaption>
+      </div>
+
+      <h2>6.1 — As famílias de comando do SQL</h2>
+      <p>O SQL não é uma linguagem única e genérica — ele se divide em "famílias" de comando, cada uma com um trabalho específico. Nesta e nas próximas duas aulas, vamos conhecer as três mais usadas no dia a dia:</p>
+      <ul>
+        <li><span class="term" tabindex="0" data-tip="Data Definition Language: cria, altera e apaga a estrutura do banco (tabelas, colunas, chaves). Comandos: CREATE, ALTER, DROP, TRUNCATE.">DDL</span> (Data Definition Language) — define a <strong>estrutura</strong>: criar tabela, mudar coluna, apagar tabela. É o assunto desta aula.</li>
+        <li><span class="term" tabindex="0" data-tip="Data Manipulation Language: mexe no CONTEÚDO das tabelas (linhas), sem mudar a estrutura delas. Comandos: INSERT, UPDATE, DELETE.">DML</span> (Data Manipulation Language) — mexe no <strong>conteúdo</strong>: inserir, atualizar, apagar linhas. Assunto da Aula 7.</li>
+        <li><span class="term" tabindex="0" data-tip="Data Query Language: consulta os dados, sem alterar nada. Comando principal: SELECT.">DQL</span> (Data Query Language) — <strong>consulta</strong> dados sem alterar nada. Assunto da Aula 8.</li>
+      </ul>
+      <div class="box analogy">
+        <span class="box-tag">Analogia</span>
+        <p>Se o banco de dados é uma casa: DDL é o pedreiro levantando paredes e cômodos; DML é a família colocando móveis, trocando de lugar ou tirando algo de dentro de casa; DQL é simplesmente <em>olhar</em> o que já está lá dentro, sem mexer em nada.</p>
+      </div>
+
+      <h2>6.2 — Criando e usando um banco de dados</h2>
+      <p>Antes de criar qualquer tabela, precisamos criar o "container" que vai guardar todas elas: o banco de dados em si.</p>
+      <pre><code><span class="sql-com">-- Cria o banco de dados, se ele ainda não existir</span>
+<span class="sql-kw">CREATE DATABASE</span> IF NOT EXISTS biblioteca;
+
+<span class="sql-com">-- Diz ao MySQL Workbench: "a partir de agora, todo comando é dentro deste banco"</span>
+<span class="sql-kw">USE</span> biblioteca;</code></pre>
+      <p>O <code>USE</code> é fácil de esquecer, mas é essencial: sem ele, o SGBD não sabe em qual banco você quer criar as tabelas — e, se você tiver vários bancos no mesmo servidor, pode acabar criando tabela no lugar errado.</p>
+
+      <h2>6.3 — CREATE TABLE: o comando mais importante desta aula</h2>
+      <p>O <code>CREATE TABLE</code> cria uma tabela nova, definindo cada coluna, o tipo de dado dela e as restrições (constraints) que vimos na Aula 5. Vamos criar a tabela <code>aluno</code> do nosso estudo de caso da biblioteca:</p>
+      <pre><code><span class="sql-kw">CREATE TABLE</span> aluno (
+  id_aluno <span class="sql-kw">INT</span> <span class="sql-kw">AUTO_INCREMENT</span> <span class="sql-kw">PRIMARY KEY</span>,
+  nome <span class="sql-kw">VARCHAR</span>(100) <span class="sql-kw">NOT NULL</span>,
+  turma <span class="sql-kw">VARCHAR</span>(20)
+);</code></pre>
+      <p>Repare no <span class="term" tabindex="0" data-tip="Faz o banco gerar o número da chave primária sozinho, aumentando 1 em 1 a cada novo registro — você nunca precisa informar esse valor na hora de inserir.">AUTO_INCREMENT</span>: ele faz o MySQL numerar os alunos sozinho (1, 2, 3...) sem que você precise informar o número na hora de cadastrar. É quase sempre usado junto com a chave primária.</p>
+      <p>Agora as outras duas tabelas do modelo lógico da Aula 5, já com chave estrangeira:</p>
+      <pre><code><span class="sql-kw">CREATE TABLE</span> livro (
+  id_livro <span class="sql-kw">INT</span> <span class="sql-kw">AUTO_INCREMENT</span> <span class="sql-kw">PRIMARY KEY</span>,
+  titulo <span class="sql-kw">VARCHAR</span>(150) <span class="sql-kw">NOT NULL</span>,
+  autor <span class="sql-kw">VARCHAR</span>(100)
+);
+
+<span class="sql-kw">CREATE TABLE</span> emprestimo (
+  id_emprestimo <span class="sql-kw">INT</span> <span class="sql-kw">AUTO_INCREMENT</span> <span class="sql-kw">PRIMARY KEY</span>,
+  id_aluno <span class="sql-kw">INT</span> <span class="sql-kw">NOT NULL</span>,
+  id_livro <span class="sql-kw">INT</span> <span class="sql-kw">NOT NULL</span>,
+  data_emprestimo <span class="sql-kw">DATE</span> <span class="sql-kw">NOT NULL</span>,
+  data_devolucao <span class="sql-kw">DATE</span>,
+  <span class="sql-kw">FOREIGN KEY</span> (id_aluno) <span class="sql-kw">REFERENCES</span> aluno(id_aluno),
+  <span class="sql-kw">FOREIGN KEY</span> (id_livro) <span class="sql-kw">REFERENCES</span> livro(id_livro)
+);</code></pre>
+      <p>Cada <code>FOREIGN KEY</code> avisa ao MySQL: "esta coluna aponta para a chave primária de outra tabela — não deixe ela apontar para algo que não existe". É a integridade referencial da Aula 2, agora sendo obrigada pelo próprio banco.</p>
+
+      <h2>6.4 — Mais algumas constraints úteis no CREATE TABLE</h2>
+      <p>Além de <code>PRIMARY KEY</code>, <code>NOT NULL</code> e <code>FOREIGN KEY</code>, vale conhecer mais três, direto na criação da tabela:</p>
+      <pre><code><span class="sql-kw">CREATE TABLE</span> usuario (
+  id_usuario <span class="sql-kw">INT</span> <span class="sql-kw">AUTO_INCREMENT</span> <span class="sql-kw">PRIMARY KEY</span>,
+  email <span class="sql-kw">VARCHAR</span>(120) <span class="sql-kw">NOT NULL</span> <span class="sql-kw">UNIQUE</span>,
+  status <span class="sql-kw">VARCHAR</span>(20) <span class="sql-kw">DEFAULT</span> <span class="sql-str">'ativo'</span>,
+  idade <span class="sql-kw">INT</span> <span class="sql-kw">CHECK</span> (idade >= 0)
+);</code></pre>
+      <ul>
+        <li><code>UNIQUE</code> — nunca deixa dois usuários terem o mesmo e-mail.</li>
+        <li><code>DEFAULT 'ativo'</code> — se ninguém informar o status na hora de cadastrar, o MySQL já preenche com "ativo" sozinho.</li>
+        <li><code>CHECK (idade >= 0)</code> — impede que alguém salve uma idade negativa, sem precisar validar isso na aplicação.</li>
+      </ul>
+
+      <h2>6.5 — ALTER TABLE: mudando uma tabela que já existe</h2>
+      <p>Nem sempre acertamos tudo de primeira. O <code>ALTER TABLE</code> serve para mudar uma tabela que já foi criada, sem precisar apagar e recriar do zero (e sem perder os dados que já estão lá dentro).</p>
+      <pre><code><span class="sql-com">-- Adicionar uma coluna nova</span>
+<span class="sql-kw">ALTER TABLE</span> aluno <span class="sql-kw">ADD COLUMN</span> email <span class="sql-kw">VARCHAR</span>(120);
+
+<span class="sql-com">-- Mudar o tipo (ou o tamanho) de uma coluna que já existe</span>
+<span class="sql-kw">ALTER TABLE</span> aluno <span class="sql-kw">MODIFY COLUMN</span> nome <span class="sql-kw">VARCHAR</span>(150);
+
+<span class="sql-com">-- Renomear uma coluna</span>
+<span class="sql-kw">ALTER TABLE</span> aluno <span class="sql-kw">RENAME COLUMN</span> turma <span class="sql-kw">TO</span> turma_atual;
+
+<span class="sql-com">-- Remover uma coluna que não é mais usada</span>
+<span class="sql-kw">ALTER TABLE</span> aluno <span class="sql-kw">DROP COLUMN</span> email;
+
+<span class="sql-com">-- Adicionar uma constraint depois que a tabela já existe</span>
+<span class="sql-kw">ALTER TABLE</span> aluno <span class="sql-kw">ADD CONSTRAINT</span> uq_nome <span class="sql-kw">UNIQUE</span> (nome);</code></pre>
+      <div class="box example">
+        <span class="box-tag">Exemplo prático</span>
+        <p>A biblioteca decidiu que agora quer guardar o telefone do aluno. Em vez de apagar a tabela inteira e recriar (perdendo todos os alunos já cadastrados), basta rodar: <code>ALTER TABLE aluno ADD COLUMN telefone VARCHAR(20);</code></p>
+      </div>
+
+      <h2>6.6 — DROP: apagando de vez</h2>
+      <p><code>DROP</code> remove completamente uma tabela (ou um banco inteiro) — estrutura e dados juntos, sem volta.</p>
+      <pre><code><span class="sql-com">-- Apaga a tabela inteira (estrutura + todos os dados)</span>
+<span class="sql-kw">DROP TABLE</span> IF EXISTS emprestimo;
+
+<span class="sql-com">-- Apaga o banco de dados inteiro, com todas as tabelas dentro dele</span>
+<span class="sql-kw">DROP DATABASE</span> IF EXISTS biblioteca;</code></pre>
+      <p>O <code>IF EXISTS</code> evita que o SQL dê erro caso a tabela (ou banco) já não exista mais — é uma boa prática usar sempre.</p>
+      <div class="box alert">
+        <span class="box-tag">Fica de olho</span>
+        <p><code>DROP TABLE</code> não tem "lixeira": uma vez executado, os dados se foram. Sempre confira duas vezes o nome da tabela antes de rodar um DROP — principalmente em um banco de produção, com dados reais de verdade.</p>
+      </div>
+
+      <h2>6.7 — TRUNCATE TABLE: esvaziando sem apagar a estrutura</h2>
+      <p><code>TRUNCATE</code> é um meio-termo interessante: apaga <strong>todas as linhas</strong> de uma tabela, mas mantém a estrutura dela (colunas, tipos, constraints) intacta — como se a tabela tivesse acabado de ser criada, vazia.</p>
+      <pre><code><span class="sql-kw">TRUNCATE TABLE</span> emprestimo;</code></pre>
+      <div class="table-wrap">
+      <table class="data">
+        <thead><tr><th>Comando</th><th>Apaga a estrutura?</th><th>Apaga os dados?</th><th>Pode desfazer com WHERE?</th></tr></thead>
+        <tbody>
+          <tr><td><code>DROP TABLE</code></td><td>Sim, a tabela deixa de existir</td><td>Sim</td><td>Não — remove a tabela inteira</td></tr>
+          <tr><td><code>TRUNCATE TABLE</code></td><td>Não, a tabela continua existindo, vazia</td><td>Sim, todas as linhas</td><td>Não — sempre limpa tudo</td></tr>
+          <tr><td><code>DELETE</code> (DML, Aula 7)</td><td>Não</td><td>Só as linhas que você escolher</td><td>Sim — usa WHERE para escolher quais linhas</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h2>6.8 — Colocando tudo em prática: criando o banco da biblioteca</h2>
+      <p>Juntando tudo que vimos, este é o script completo que cria o banco de dados da biblioteca do zero, pronto para colar no SQL Editor do MySQL Workbench:</p>
+      <pre><code><span class="sql-kw">CREATE DATABASE</span> IF NOT EXISTS biblioteca;
+<span class="sql-kw">USE</span> biblioteca;
+
+<span class="sql-kw">CREATE TABLE</span> aluno (
+  id_aluno <span class="sql-kw">INT</span> <span class="sql-kw">AUTO_INCREMENT</span> <span class="sql-kw">PRIMARY KEY</span>,
+  nome <span class="sql-kw">VARCHAR</span>(100) <span class="sql-kw">NOT NULL</span>,
+  turma <span class="sql-kw">VARCHAR</span>(20)
+);
+
+<span class="sql-kw">CREATE TABLE</span> livro (
+  id_livro <span class="sql-kw">INT</span> <span class="sql-kw">AUTO_INCREMENT</span> <span class="sql-kw">PRIMARY KEY</span>,
+  titulo <span class="sql-kw">VARCHAR</span>(150) <span class="sql-kw">NOT NULL</span>,
+  autor <span class="sql-kw">VARCHAR</span>(100)
+);
+
+<span class="sql-kw">CREATE TABLE</span> emprestimo (
+  id_emprestimo <span class="sql-kw">INT</span> <span class="sql-kw">AUTO_INCREMENT</span> <span class="sql-kw">PRIMARY KEY</span>,
+  id_aluno <span class="sql-kw">INT</span> <span class="sql-kw">NOT NULL</span>,
+  id_livro <span class="sql-kw">INT</span> <span class="sql-kw">NOT NULL</span>,
+  data_emprestimo <span class="sql-kw">DATE</span> <span class="sql-kw">NOT NULL</span>,
+  data_devolucao <span class="sql-kw">DATE</span>,
+  <span class="sql-kw">FOREIGN KEY</span> (id_aluno) <span class="sql-kw">REFERENCES</span> aluno(id_aluno),
+  <span class="sql-kw">FOREIGN KEY</span> (id_livro) <span class="sql-kw">REFERENCES</span> livro(id_livro)
+);</code></pre>
+      <p>Na próxima aula (DML), vamos usar exatamente essas três tabelas para começar a colocar dados de verdade dentro delas.</p>
+    </div>
+
+    <div class="sheet exsheet">
+      <p class="eyebrow">Sala de exercícios — Aula 6</p>
+      <h2 style="margin-top:0; padding-top:0; border-top:none;">Fixando o conteúdo</h2>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">1</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Múltipla escolha</span>
+            <p>Qual comando cria uma tabela nova no banco de dados?</p>
+            <ul class="ex-options">
+              <li><code>ALTER TABLE</code></li>
+              <li><code>CREATE TABLE</code></li>
+              <li><code>INSERT INTO</code></li>
+              <li><code>SELECT TABLE</code></li>
+            </ul>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content"><code>CREATE TABLE</code>.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">2</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Associe o comando à ação</span>
+            <p>(A) <code>ALTER TABLE</code> &nbsp;&nbsp; (B) <code>DROP TABLE</code> &nbsp;&nbsp; (C) <code>TRUNCATE TABLE</code></p>
+            <p>( &nbsp;&nbsp; ) Apaga todas as linhas de uma tabela, mas mantém a estrutura dela.</p>
+            <p>( &nbsp;&nbsp; ) Remove uma tabela inteira, estrutura e dados juntos.</p>
+            <p>( &nbsp;&nbsp; ) Adiciona uma nova coluna a uma tabela que já existe.</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">C — B — A.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">3</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Escreva o comando</span>
+            <p>Escreva o <code>CREATE TABLE</code> completo de uma tabela <strong>produto</strong>, com: id_produto (chave primária, auto incremento), nome (texto até 100 caracteres, obrigatório), preco (decimal com 2 casas, não pode ser negativo) e estoque (número inteiro, valor padrão 0).</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content"><code>CREATE TABLE produto (id_produto INT AUTO_INCREMENT PRIMARY KEY, nome VARCHAR(100) NOT NULL, preco DECIMAL(10,2) CHECK (preco >= 0), estoque INT DEFAULT 0);</code></div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">4</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Verdadeiro ou falso</span>
+            <p>( &nbsp;&nbsp; ) O AUTO_INCREMENT faz o próprio banco gerar o valor da chave primária.</p>
+            <p>( &nbsp;&nbsp; ) TRUNCATE TABLE remove a tabela do banco, ela deixa de existir.</p>
+            <p>( &nbsp;&nbsp; ) DROP DATABASE apaga o banco inteiro, com todas as tabelas dentro dele.</p>
+            <p>( &nbsp;&nbsp; ) ALTER TABLE serve para mudar uma tabela sem perder os dados que já estão nela.</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">V — F — V — V. O TRUNCATE esvazia a tabela, mas ela continua existindo (quem apaga a tabela é o DROP).</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">5</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Complete o script</span>
+            <p>A tabela <code>emprestimo</code> precisa passar a guardar também uma observação (texto livre, opcional). Escreva o comando <code>ALTER TABLE</code> que adiciona essa coluna, chamada <code>observacao</code>, do tipo <code>TEXT</code>.</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content"><code>ALTER TABLE emprestimo ADD COLUMN observacao TEXT;</code></div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">6</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Estudo de caso — pratique o CREATE TABLE</span>
+            <p>Volte ao modelo lógico da locadora de filmes que você montou na Aula 5 (Filme, Cliente, Aluguel). Escreva o script SQL completo em DDL que cria as três tabelas no MySQL, incluindo as chaves estrangeiras da tabela Aluguel.</p>
+            <details class="gab"><summary>Ver um exemplo de resposta</summary><div class="gab-content">CREATE TABLE filme (id_filme INT AUTO_INCREMENT PRIMARY KEY, titulo VARCHAR(150) NOT NULL, genero VARCHAR(50)); CREATE TABLE cliente (id_cliente INT AUTO_INCREMENT PRIMARY KEY, nome VARCHAR(100) NOT NULL, telefone VARCHAR(20)); CREATE TABLE aluguel (id_aluguel INT AUTO_INCREMENT PRIMARY KEY, id_filme INT NOT NULL, id_cliente INT NOT NULL, data_aluguel DATE NOT NULL, data_devolucao DATE, FOREIGN KEY (id_filme) REFERENCES filme(id_filme), FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente));</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="prevnext">
+        <button onclick="goTo('aula5')">&larr; Aula 5 — Modelo Lógico</button>
+        <button onclick="goTo('aula7')">Ir para Aula 7 — DML &rarr;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AULA 7 ============ -->
+  <section class="page" id="page-aula7">
+    <div class="sheet">
+      <p class="eyebrow">Prancha 07 / 08 — Bloco 2</p>
+      <h1>Aula 7 — DML: Manipulando os Dados</h1>
+      <p class="lede">Com as tabelas já criadas na Aula 6, chegou a hora de colocar gente e livro de verdade dentro delas. Nesta aula usamos a <span class="term" tabindex="0" data-tip="Data Manipulation Language: mexe no CONTEÚDO das tabelas (linhas), sem mudar a estrutura delas. Comandos: INSERT, UPDATE, DELETE.">DML</span> — os três comandos que inserem, atualizam e apagam linhas dentro de uma tabela que já existe.</p>
+
+      <div class="figure">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Modern_warehouse_with_pallet_rack_storage_system.jpg?width=900" alt="Armazém com prateleiras organizadas guardando paletes de mercadoria">
+        <figcaption>Se as tabelas são as prateleiras já montadas (DDL), o DML é a movimentação de mercadoria: colocar caixa nova, trocar uma caixa de lugar, tirar uma caixa da prateleira. Fonte: Wikimedia Commons.</figcaption>
+      </div>
+
+      <h2>7.1 — Os três comandos da DML</h2>
+      <p>São só três, e cada um faz exatamente uma coisa:</p>
+      <ul>
+        <li><code>INSERT INTO</code> — coloca uma linha nova na tabela.</li>
+        <li><code>UPDATE</code> — muda o valor de uma ou mais colunas em linhas que já existem.</li>
+        <li><code>DELETE</code> — remove linhas inteiras da tabela.</li>
+      </ul>
+      <p>Repare que nenhum dos três muda a <em>estrutura</em> da tabela — as colunas continuam as mesmas, só o conteúdo (as linhas) é que muda.</p>
+
+      <h2>7.2 — INSERT INTO: colocando dados na tabela</h2>
+      <p>A forma mais segura de inserir é sempre listando o nome das colunas explicitamente:</p>
+      <pre><code><span class="sql-kw">INSERT INTO</span> aluno (nome, turma)
+<span class="sql-kw">VALUES</span> (<span class="sql-str">'Bruno Lima'</span>, <span class="sql-str">'DS-2026'</span>);</code></pre>
+      <p>Repare que <code>id_aluno</code> nem aparece — como ele é <code>AUTO_INCREMENT</code>, o próprio MySQL gera esse número sozinho.</p>
+      <div class="box alert">
+        <span class="box-tag">Fica de olho</span>
+        <p>É possível inserir sem listar as colunas: <code>INSERT INTO aluno VALUES (NULL, 'Bruno Lima', 'DS-2026');</code>. Só que aí você precisa acertar a ordem <strong>exata</strong> de todas as colunas da tabela, incluindo o id. Um erro de ordem, e o dado vai parar na coluna errada sem o MySQL avisar. Por isso, listar as colunas é sempre mais seguro.</p>
+      </div>
+      <p>Também dá para inserir várias linhas de uma vez só, em um único comando:</p>
+      <pre><code><span class="sql-kw">INSERT INTO</span> livro (titulo, autor) <span class="sql-kw">VALUES</span>
+(<span class="sql-str">'Dom Casmurro'</span>, <span class="sql-str">'Machado de Assis'</span>),
+(<span class="sql-str">'O Cortiço'</span>, <span class="sql-str">'Aluísio Azevedo'</span>),
+(<span class="sql-str">'Vidas Secas'</span>, <span class="sql-str">'Graciliano Ramos'</span>);</code></pre>
+      <div class="box example">
+        <span class="box-tag">Exemplo</span>
+        <p>Inserindo um empréstimo, ligando um aluno a um livro que já existem: <code>INSERT INTO emprestimo (id_aluno, id_livro, data_emprestimo) VALUES (1, 2, '2026-08-04');</code>. Como <code>id_aluno</code> e <code>id_livro</code> são chaves estrangeiras, o MySQL só aceita esse INSERT se o aluno 1 e o livro 2 realmente existirem nas tabelas de origem.</p>
+      </div>
+
+      <h2>7.3 — UPDATE: alterando dados que já existem</h2>
+      <p>O <code>UPDATE</code> muda o valor de uma ou mais colunas, nas linhas que você escolher com <code>WHERE</code>:</p>
+      <pre><code><span class="sql-kw">UPDATE</span> aluno
+<span class="sql-kw">SET</span> turma = <span class="sql-str">'DS-2027'</span>
+<span class="sql-kw">WHERE</span> id_aluno = 1;</code></pre>
+      <p>Dá para mudar várias colunas de uma vez, separando por vírgula:</p>
+      <pre><code><span class="sql-kw">UPDATE</span> emprestimo
+<span class="sql-kw">SET</span> data_devolucao = <span class="sql-str">'2026-08-20'</span>
+<span class="sql-kw">WHERE</span> id_emprestimo = 5;</code></pre>
+      <div class="box alert">
+        <span class="box-tag">Fica de olho — o erro mais perigoso da DML</span>
+        <p>Se você esquecer o <code>WHERE</code>, o <code>UPDATE</code> muda a coluna em <strong>todas</strong> as linhas da tabela. <code>UPDATE aluno SET turma = 'DS-2027';</code> sem WHERE colocaria todo mundo na mesma turma de uma vez. Sempre confira o WHERE antes de rodar um UPDATE — em bancos de produção, um UPDATE sem WHERE pode ser catastrófico.</p>
+      </div>
+
+      <h2>7.4 — DELETE: removendo linhas</h2>
+      <p>O <code>DELETE</code> apaga linhas inteiras, também escolhidas com <code>WHERE</code>:</p>
+      <pre><code><span class="sql-kw">DELETE FROM</span> emprestimo
+<span class="sql-kw">WHERE</span> id_emprestimo = 5;</code></pre>
+      <div class="box alert">
+        <span class="box-tag">Fica de olho</span>
+        <p>Assim como no UPDATE, esquecer o <code>WHERE</code> no DELETE apaga <strong>todas</strong> as linhas da tabela — mas, ao contrário do TRUNCATE (Aula 6), o DELETE ainda permite escolher exatamente quais linhas remover.</p>
+      </div>
+
+      <h2>7.5 — Boa prática: testar o filtro com SELECT antes</h2>
+      <p>Como o <code>WHERE</code> do UPDATE e do DELETE não tem "desfazer", uma prática comum entre desenvolvedores é rodar primeiro um <code>SELECT</code> com o mesmo filtro, só para conferir visualmente quais linhas seriam afetadas, e só depois trocar o <code>SELECT *</code> pelo comando de verdade:</p>
+      <pre><code><span class="sql-com">-- 1) Primeiro, confira quem seria afetado</span>
+<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> aluno <span class="sql-kw">WHERE</span> turma = <span class="sql-str">'DS-2026'</span>;
+
+<span class="sql-com">-- 2) Se a lista bateu com o esperado, agora sim rode o comando real</span>
+<span class="sql-kw">DELETE FROM</span> aluno <span class="sql-kw">WHERE</span> turma = <span class="sql-str">'DS-2026'</span>;</code></pre>
+      <p>Vamos estudar o <code>SELECT</code> a fundo já na próxima aula — mas adiantar essa dica agora evita muita dor de cabeça na hora de praticar UPDATE e DELETE.</p>
+
+      <h2>7.6 — Colocando tudo em prática: populando o banco da biblioteca</h2>
+      <p>Retomando as tabelas criadas na Aula 6, este script popula o banco da biblioteca com alguns dados de exemplo:</p>
+      <pre><code><span class="sql-kw">INSERT INTO</span> aluno (nome, turma) <span class="sql-kw">VALUES</span>
+(<span class="sql-str">'Bruno Lima'</span>, <span class="sql-str">'DS-2026'</span>),
+(<span class="sql-str">'Carla Nunes'</span>, <span class="sql-str">'DS-2026'</span>);
+
+<span class="sql-kw">INSERT INTO</span> livro (titulo, autor) <span class="sql-kw">VALUES</span>
+(<span class="sql-str">'Dom Casmurro'</span>, <span class="sql-str">'Machado de Assis'</span>),
+(<span class="sql-str">'O Cortiço'</span>, <span class="sql-str">'Aluísio Azevedo'</span>);
+
+<span class="sql-kw">INSERT INTO</span> emprestimo (id_aluno, id_livro, data_emprestimo) <span class="sql-kw">VALUES</span>
+(1, 1, <span class="sql-str">'2026-08-01'</span>),
+(2, 2, <span class="sql-str">'2026-08-02'</span>);
+
+<span class="sql-com">-- A Carla devolveu o livro dela</span>
+<span class="sql-kw">UPDATE</span> emprestimo <span class="sql-kw">SET</span> data_devolucao = <span class="sql-str">'2026-08-10'</span> <span class="sql-kw">WHERE</span> id_aluno = 2;
+
+<span class="sql-com">-- O Bruno perdeu o prazo e desistiu do livro — cancela o empréstimo dele</span>
+<span class="sql-kw">DELETE FROM</span> emprestimo <span class="sql-kw">WHERE</span> id_aluno = 1;</code></pre>
+    </div>
+
+    <div class="sheet exsheet">
+      <p class="eyebrow">Sala de exercícios — Aula 7</p>
+      <h2 style="margin-top:0; padding-top:0; border-top:none;">Fixando o conteúdo</h2>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">1</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Múltipla escolha</span>
+            <p>Qual comando você usa para adicionar uma nova linha em uma tabela que já existe?</p>
+            <ul class="ex-options">
+              <li><code>CREATE TABLE</code></li>
+              <li><code>ALTER TABLE</code></li>
+              <li><code>INSERT INTO</code></li>
+              <li><code>UPDATE</code></li>
+            </ul>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content"><code>INSERT INTO</code>.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">2</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Verdadeiro ou falso</span>
+            <p>( &nbsp;&nbsp; ) Um UPDATE sem WHERE altera todas as linhas da tabela.</p>
+            <p>( &nbsp;&nbsp; ) O INSERT INTO muda a estrutura da tabela, criando uma coluna nova.</p>
+            <p>( &nbsp;&nbsp; ) Não é preciso informar o valor de uma coluna AUTO_INCREMENT no INSERT.</p>
+            <p>( &nbsp;&nbsp; ) O DELETE sem WHERE remove a tabela inteira do banco.</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">V — F — V — F. O DELETE sem WHERE apaga todas as linhas, mas a tabela continua existindo (quem remove a tabela é o DROP).</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">3</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Escreva o comando</span>
+            <p>Escreva um comando <code>INSERT INTO</code> que cadastra um novo livro na tabela <code>livro</code>: título "Grande Sertão: Veredas", autor "Guimarães Rosa".</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content"><code>INSERT INTO livro (titulo, autor) VALUES ('Grande Sertão: Veredas', 'Guimarães Rosa');</code></div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">4</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Encontre o erro</span>
+            <p>O comando abaixo foi escrito para atualizar a turma de um único aluno, mas tem um problema grave. Identifique o erro e reescreva corretamente, supondo que você quer mudar só o aluno de id 3:</p>
+            <pre><code><span class="sql-kw">UPDATE</span> aluno <span class="sql-kw">SET</span> turma = <span class="sql-str">'DS-2027'</span>;</code></pre>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">Falta o WHERE — sem ele, todos os alunos da tabela seriam movidos para a turma DS-2027. Correção: <code>UPDATE aluno SET turma = 'DS-2027' WHERE id_aluno = 3;</code></div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">5</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Escreva o comando</span>
+            <p>Escreva um comando <code>DELETE</code> que remove, da tabela <code>emprestimo</code>, apenas os empréstimos cuja <code>data_devolucao</code> ainda esteja vazia (ou seja, IS NULL) e cujo id_aluno seja 7.</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content"><code>DELETE FROM emprestimo WHERE id_aluno = 7 AND data_devolucao IS NULL;</code></div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">6</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Estudo de caso — pratique a DML</span>
+            <p>Usando as tabelas da locadora de filmes (Filme, Cliente, Aluguel — Aula 6), escreva: (1) um INSERT cadastrando um cliente novo; (2) um INSERT cadastrando um filme novo; (3) um UPDATE que marca a data_devolucao de um aluguel específico (id_aluguel = 4); (4) um DELETE que remove um aluguel específico (id_aluguel = 9).</p>
+            <details class="gab"><summary>Ver um exemplo de resposta</summary><div class="gab-content">INSERT INTO cliente (nome, telefone) VALUES ('Marina Alves', '51 98888-1234'); INSERT INTO filme (titulo, genero) VALUES ('Cidade de Deus', 'Drama'); UPDATE aluguel SET data_devolucao = '2026-08-15' WHERE id_aluguel = 4; DELETE FROM aluguel WHERE id_aluguel = 9;</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="prevnext">
+        <button onclick="goTo('aula6')">&larr; Aula 6 — DDL</button>
+        <button onclick="goTo('aula8')">Ir para Aula 8 — DQL Básico &rarr;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AULA 8 ============ -->
+  <section class="page" id="page-aula8">
+    <div class="sheet">
+      <p class="eyebrow">Prancha 08 / 08 — Bloco 2</p>
+      <h1>Aula 8 — DQL Básico: Consultando os Dados</h1>
+      <p class="lede">Chegamos ao comando mais usado no dia a dia de quem trabalha com banco de dados: o <code>SELECT</code>. Nesta aula aprendemos a <strong>consultar</strong> dados — filtrar, ordenar, limitar e resumir — tudo isso ainda dentro de <strong>uma única tabela</strong> por vez. Consultas que juntam várias tabelas ao mesmo tempo (<code>JOIN</code>) ficam para uma aula futura.</p>
+
+      <div class="figure">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Magnifying_glass.jpg?width=700" alt="Lupa sobre uma superfície, símbolo de busca e consulta">
+        <figcaption>Consultar dados é exatamente isso: usar uma "lupa" para enxergar só o que interessa dentro de uma tabela cheia de informação. Fonte: Wikimedia Commons.</figcaption>
+      </div>
+
+      <h2>8.1 — O que é DQL</h2>
+      <p>A <span class="term" tabindex="0" data-tip="Data Query Language: consulta os dados, sem alterar nada. Comando principal: SELECT.">DQL</span> tem um único comando principal: <code>SELECT</code>. Diferente de DDL e DML, o SELECT nunca muda nada no banco — ele só <em>lê</em> e devolve o resultado para você.</p>
+
+      <h2>8.2 — SELECT básico: escolhendo o que ver</h2>
+      <pre><code><span class="sql-com">-- Traz TODAS as colunas de TODAS as linhas da tabela</span>
+<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> aluno;
+
+<span class="sql-com">-- Traz só as colunas que interessam</span>
+<span class="sql-kw">SELECT</span> nome, turma <span class="sql-kw">FROM</span> aluno;</code></pre>
+      <p>O <code>*</code> (asterisco) significa "todas as colunas". É prático para explorar uma tabela, mas em sistemas de verdade é mais comum listar só as colunas necessárias — traz menos dado desnecessário pela rede.</p>
+      <p>Também dá para dar um "apelido" a uma coluna no resultado, usando <code>AS</code>:</p>
+      <pre><code><span class="sql-kw">SELECT</span> nome <span class="sql-kw">AS</span> nome_do_aluno, turma <span class="sql-kw">AS</span> turma_atual
+<span class="sql-kw">FROM</span> aluno;</code></pre>
+
+      <h2>8.3 — WHERE: filtrando quais linhas aparecem</h2>
+      <p>O <code>WHERE</code> já apareceu na Aula 7 (em UPDATE e DELETE) — no SELECT ele funciona do mesmo jeito, só que filtrando o que você <em>vê</em>, em vez de o que é alterado.</p>
+      <pre><code><span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> aluno <span class="sql-kw">WHERE</span> turma = <span class="sql-str">'DS-2026'</span>;</code></pre>
+      <p>Os operadores de comparação básicos:</p>
+      <div class="table-wrap">
+      <table class="data">
+        <thead><tr><th>Operador</th><th>Significado</th></tr></thead>
+        <tbody>
+          <tr><td><code>=</code></td><td>igual a</td></tr>
+          <tr><td><code>&lt;&gt;</code> ou <code>!=</code></td><td>diferente de</td></tr>
+          <tr><td><code>&gt;</code> / <code>&lt;</code></td><td>maior que / menor que</td></tr>
+          <tr><td><code>&gt;=</code> / <code>&lt;=</code></td><td>maior ou igual / menor ou igual</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>Você pode combinar condições com <code>AND</code>, <code>OR</code> e <code>NOT</code>:</p>
+      <pre><code><span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> emprestimo
+<span class="sql-kw">WHERE</span> data_emprestimo >= <span class="sql-str">'2026-08-01'</span> <span class="sql-kw">AND</span> data_devolucao <span class="sql-kw">IS NULL</span>;</code></pre>
+      <p>E existem alguns operadores especiais, muito usados no dia a dia:</p>
+      <ul>
+        <li><code>BETWEEN a AND b</code> — está dentro de um intervalo. Ex.: <code>WHERE preco BETWEEN 10 AND 50</code>.</li>
+        <li><code>IN (lista)</code> — bate com algum valor de uma lista. Ex.: <code>WHERE turma IN ('DS-2026', 'DS-2027')</code>.</li>
+        <li><code>LIKE</code> — compara texto com um padrão, usando <code>%</code> (qualquer sequência de caracteres) e <code>_</code> (um único caractere). Ex.: <code>WHERE nome LIKE 'Ana%'</code> encontra "Ana", "Ana Paula", "Anabela".</li>
+        <li><code>IS NULL</code> / <code>IS NOT NULL</code> — verifica se um campo está vazio (nunca use <code>= NULL</code>, isso não funciona em SQL).</li>
+      </ul>
+      <div class="box example">
+        <span class="box-tag">Exemplo</span>
+        <p>Buscar todos os livros cujo título comece com "O": <code>SELECT * FROM livro WHERE titulo LIKE 'O%';</code>. Buscar empréstimos ainda não devolvidos: <code>SELECT * FROM emprestimo WHERE data_devolucao IS NULL;</code>.</p>
+      </div>
+
+      <h2>8.4 — ORDER BY e LIMIT: ordenando e cortando o resultado</h2>
+      <pre><code><span class="sql-com">-- Ordena por nome, de A a Z (ascendente é o padrão)</span>
+<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> aluno <span class="sql-kw">ORDER BY</span> nome <span class="sql-kw">ASC</span>;
+
+<span class="sql-com">-- Ordena do mais caro para o mais barato</span>
+<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> livro <span class="sql-kw">ORDER BY</span> titulo <span class="sql-kw">DESC</span>;
+
+<span class="sql-com">-- Traz só os 5 primeiros resultados</span>
+<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> aluno <span class="sql-kw">ORDER BY</span> nome <span class="sql-kw">LIMIT</span> 5;</code></pre>
+      <p><code>ASC</code> (crescente) é o padrão, então pode ser omitido; <code>DESC</code> (decrescente) sempre precisa ser escrito explicitamente. O <code>LIMIT</code> é muito usado junto com <code>ORDER BY</code> para perguntas do tipo "quais os 3 livros mais recentes?".</p>
+
+      <h2>8.5 — Funções de agregação: resumindo os dados</h2>
+      <p>Funções de agregação fazem um cálculo em cima de várias linhas e devolvem um único valor:</p>
+      <div class="table-wrap">
+      <table class="data">
+        <thead><tr><th>Função</th><th>O que faz</th></tr></thead>
+        <tbody>
+          <tr><td><code>COUNT(*)</code></td><td>Conta quantas linhas existem</td></tr>
+          <tr><td><code>SUM(coluna)</code></td><td>Soma os valores de uma coluna numérica</td></tr>
+          <tr><td><code>AVG(coluna)</code></td><td>Calcula a média dos valores</td></tr>
+          <tr><td><code>MIN(coluna)</code></td><td>Encontra o menor valor</td></tr>
+          <tr><td><code>MAX(coluna)</code></td><td>Encontra o maior valor</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <pre><code><span class="sql-com">-- Quantos alunos existem cadastrados</span>
+<span class="sql-kw">SELECT</span> <span class="sql-kw">COUNT</span>(*) <span class="sql-kw">FROM</span> aluno;
+
+<span class="sql-com">-- Qual o preço médio dos livros (se a tabela livro tivesse uma coluna preco)</span>
+<span class="sql-kw">SELECT</span> <span class="sql-kw">AVG</span>(preco) <span class="sql-kw">FROM</span> livro;</code></pre>
+
+      <h2>8.6 — GROUP BY e HAVING: agrupando linhas parecidas</h2>
+      <p>O <code>GROUP BY</code> agrupa linhas que têm o mesmo valor em uma coluna, e é quase sempre usado junto com uma função de agregação:</p>
+      <pre><code><span class="sql-com">-- Quantos alunos existem em cada turma</span>
+<span class="sql-kw">SELECT</span> turma, <span class="sql-kw">COUNT</span>(*) <span class="sql-kw">AS</span> total_alunos
+<span class="sql-kw">FROM</span> aluno
+<span class="sql-kw">GROUP BY</span> turma;</code></pre>
+      <p>Se você quiser filtrar os <em>grupos</em> resultantes (e não as linhas originais), use <code>HAVING</code> em vez de <code>WHERE</code> — o WHERE roda antes do agrupamento, o HAVING roda depois:</p>
+      <pre><code><span class="sql-com">-- Só as turmas que têm mais de 20 alunos</span>
+<span class="sql-kw">SELECT</span> turma, <span class="sql-kw">COUNT</span>(*) <span class="sql-kw">AS</span> total_alunos
+<span class="sql-kw">FROM</span> aluno
+<span class="sql-kw">GROUP BY</span> turma
+<span class="sql-kw">HAVING</span> <span class="sql-kw">COUNT</span>(*) > 20;</code></pre>
+      <div class="box alert">
+        <span class="box-tag">Fica de olho</span>
+        <p>WHERE filtra <strong>linhas</strong>, antes de agrupar. HAVING filtra <strong>grupos</strong>, depois de agrupar. É por isso que não dá para usar uma função de agregação (como COUNT) dentro de um WHERE — nesse ponto da consulta, os grupos ainda nem existem.</p>
+      </div>
+
+      <h2>8.7 — A ordem lógica de um SELECT completo</h2>
+      <p>Quando você usa vários desses recursos juntos, existe uma ordem que o MySQL espera:</p>
+      <pre><code><span class="sql-kw">SELECT</span> colunas
+<span class="sql-kw">FROM</span> tabela
+<span class="sql-kw">WHERE</span> condição
+<span class="sql-kw">GROUP BY</span> coluna
+<span class="sql-kw">HAVING</span> condição_do_grupo
+<span class="sql-kw">ORDER BY</span> coluna
+<span class="sql-kw">LIMIT</span> quantidade;</code></pre>
+      <div class="box example">
+        <span class="box-tag">Exemplo completo</span>
+        <p>"Quais são as 3 turmas com mais alunos, entre as que têm mais de 5 alunos, ordenadas da maior para a menor?"</p>
+        <pre><code><span class="sql-kw">SELECT</span> turma, <span class="sql-kw">COUNT</span>(*) <span class="sql-kw">AS</span> total_alunos
+<span class="sql-kw">FROM</span> aluno
+<span class="sql-kw">GROUP BY</span> turma
+<span class="sql-kw">HAVING</span> <span class="sql-kw">COUNT</span>(*) > 5
+<span class="sql-kw">ORDER BY</span> total_alunos <span class="sql-kw">DESC</span>
+<span class="sql-kw">LIMIT</span> 3;</code></pre>
+      </div>
+
+      <div class="box alert">
+        <span class="box-tag">O que ainda falta</span>
+        <p>Repare que, até aqui, toda consulta busca dados de <strong>uma tabela só</strong>. Mas o empréstimo guarda só o <code>id_aluno</code> e o <code>id_livro</code> — não o nome do aluno nem o título do livro. Para juntar informação de várias tabelas ao mesmo tempo (por exemplo, "mostre o nome do aluno e o título do livro de cada empréstimo"), vamos precisar do <code>JOIN</code>, assunto de uma aula futura.</p>
+      </div>
+    </div>
+
+    <div class="sheet exsheet">
+      <p class="eyebrow">Sala de exercícios — Aula 8</p>
+      <h2 style="margin-top:0; padding-top:0; border-top:none;">Fixando o conteúdo</h2>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">1</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Múltipla escolha</span>
+            <p>Qual comando você usa para consultar dados sem alterar nada no banco?</p>
+            <ul class="ex-options">
+              <li><code>UPDATE</code></li>
+              <li><code>SELECT</code></li>
+              <li><code>ALTER TABLE</code></li>
+              <li><code>INSERT INTO</code></li>
+            </ul>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content"><code>SELECT</code>.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">2</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Escreva a consulta</span>
+            <p>Escreva um SELECT que traga apenas o <code>titulo</code> e o <code>autor</code> de todos os livros escritos por "Machado de Assis".</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content"><code>SELECT titulo, autor FROM livro WHERE autor = 'Machado de Assis';</code></div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">3</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Associe o operador</span>
+            <p>(A) <code>LIKE</code> &nbsp;&nbsp; (B) <code>BETWEEN</code> &nbsp;&nbsp; (C) <code>IN</code> &nbsp;&nbsp; (D) <code>IS NULL</code></p>
+            <p>( &nbsp;&nbsp; ) Verifica se um campo está vazio.</p>
+            <p>( &nbsp;&nbsp; ) Compara texto usando um padrão com % ou _.</p>
+            <p>( &nbsp;&nbsp; ) Verifica se um valor está dentro de um intervalo.</p>
+            <p>( &nbsp;&nbsp; ) Verifica se um valor bate com algum item de uma lista.</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">D — A — B — C.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">4</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Verdadeiro ou falso</span>
+            <p>( &nbsp;&nbsp; ) WHERE filtra linhas antes do agrupamento; HAVING filtra grupos depois do agrupamento.</p>
+            <p>( &nbsp;&nbsp; ) ORDER BY DESC ordena do menor para o maior.</p>
+            <p>( &nbsp;&nbsp; ) COUNT(*) conta o número de linhas retornadas.</p>
+            <p>( &nbsp;&nbsp; ) Um SELECT pode mudar os dados de uma tabela se você não usar WHERE.</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content">V — F — V — F. ORDER BY DESC ordena do maior para o menor; e SELECT nunca altera dados, só lê.</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">5</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Escreva a consulta</span>
+            <p>Escreva um SELECT que mostre quantos empréstimos existem para cada <code>id_aluno</code> na tabela <code>emprestimo</code>, ordenados do aluno com mais empréstimos para o com menos.</p>
+            <details class="gab"><summary>Ver gabarito</summary><div class="gab-content"><code>SELECT id_aluno, COUNT(*) AS total_emprestimos FROM emprestimo GROUP BY id_aluno ORDER BY total_emprestimos DESC;</code></div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-head"><span class="ex-num">6</span>
+          <div class="ex-body" style="width:100%">
+            <span class="ex-type">Estudo de caso — pratique o SELECT</span>
+            <p>Usando a tabela <code>aluguel</code> da locadora de filmes (id_aluguel, id_filme, id_cliente, data_aluguel, data_devolucao), escreva uma única consulta que traga apenas os aluguéis feitos a partir de 01/07/2026 que ainda não foram devolvidos, ordenados pela data de aluguel, do mais antigo para o mais recente, mostrando só os 10 primeiros.</p>
+            <details class="gab"><summary>Ver um exemplo de resposta</summary><div class="gab-content">SELECT * FROM aluguel WHERE data_aluguel >= '2026-07-01' AND data_devolucao IS NULL ORDER BY data_aluguel ASC LIMIT 10;</div></details>
+          </div>
+        </div>
+      </div>
+
+      <div class="prevnext">
+        <button onclick="goTo('aula7')">&larr; Aula 7 — DML</button>
         <button onclick="goTo('home')">Voltar ao Índice &rarr;</button>
       </div>
     </div>
@@ -1206,7 +1848,7 @@
 
 <footer class="stamp">
   <span>UC3 · PLANEJAR E ADMINISTRAR BANCO DE DADOS</span>
-  <span>BLOCO 1 — PRANCHAS 01–04 · TÉCNICO EM DESENVOLVIMENTO DE SISTEMAS</span>
+  <span>BLOCO 1–2 — PRANCHAS 01–08 · TÉCNICO EM DESENVOLVIMENTO DE SISTEMAS</span>
 </footer>
 
 <script>

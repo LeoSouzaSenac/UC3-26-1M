@@ -64,3 +64,100 @@ Vamos então criar a tabela 'vendas', que liga com 'clientes', deste modo:
 No exemplo acima, logo após criarmos a coluna `id_cliente`, usamos o comando `FOREIGN KEY`. O `(id_cliente)` indica qual a coluna que é nossa chave estrangeira. O `REFERENCES clientes(id_clientes)` indica com qual tabela (clientes) e em qual coluna desta tabela (id_clientes) estamos fazendo a ligação. Sempre crie todas as colunas primeiro e só final crie todas as foreign keys.
 
 ### Tente você mesmo(a): agora você deve criar a tabela itens_vendas. Utilize o que você aprendeu sobre foreign keys. Lembre-se: nesta tabela são 2 foreign keys diferentes. Crie primeiro as colunas e só depois crie as chaves estrangeiras.
+
+
+```sql
+    CREATE TABLE IF NOT EXISTS itens_vendas (
+	id_itens_venda INT PRIMARY KEY AUTO_INCREMENT,
+    id_venda INT NOT NULL,
+    id_bicicleta INT NOT NULL,
+    quantidade INT NOT NULL DEFAULT 1,
+    FOREIGN KEY (id_venda) REFERENCES vendas(id_venda),
+    FOREIGN KEY (id_bicicleta) REFERENCES bicicletas(id_bicicleta)
+);
+```
+
+### PASSO 5 - Como alterar tabelas já criadas
+
+Pense só, criamos nossas tabelas mas aí vem o pensamento: "puts, clientes devem ter CPF, mas eu não criei essa coluna. E agora?". Calma, gafanhoto, tem solução, e ela se chama `ALTER TABLE`. Este comando nos permite alterar nossas tabelas. Podemos trocar o nome, criar colunas novas, etc etc.
+
+#### Alterar e adicionar uma coluna nova:
+```sql
+    ALTER TABLE nome_da_tabela ADD COLUMN nome_da_coluna TIPO;
+```
+
+```sql
+    ALTER TABLE clientes ADD COLUMN cpf VARCHAR(11) NOT NULL UNIQUE;
+```
+
+### Alterar e mudar o tipo e/ou o tamanho de uma coluna
+```sql
+    ALTER TABLE nome_da_tabela MODIFY COLUMN nome_da_coluna TIPO;
+```
+
+```sql
+    ALTER TABLE clientes MODIFY COLUMN nome VARCHAR(150);
+```
+
+### Alterar e renomear uma coluna
+```sql
+    ALTER TABLE nome_da_tabela RENAME COLUMN nome_antigo_da_coluna TO nome_novo_da_coluna;
+```
+
+```sql
+    ALTER TABLE itens_vendas RENAME COLUMN quantidade TO qtd;
+```
+
+### Alterar e renomear uma TABELA
+```sql
+    ALTER TABLE nome_da_tabela RENAME TO nome_novo_da_tabela;
+```
+
+```sql
+    ALTER TABLE itens_vendas RENAME TO itens;
+```
+
+### Alterar e remover uma coluna
+```sql
+    ALTER TABLE nome_da_tabela DROP COLUMN nome_da_coluna;
+```
+
+```sql
+    ALTER TABLE clientes DROP COLUMN cpf;
+```
+
+> PUTS, ESQUECI DA FOREIGN KEY! E AGORA?
+
+### Alterar e adicionar chaves estrangeiras (foreign keys)
+```sql
+    ALTER TABLE nome_da_tabela ADD CONSTRAINT nome_da_fk FOREIGN KEY (nome_da_coluna_fk) REFERENCES nome_da_tabela_referenciada(nome_da_coluna_referenciada);
+```
+
+```sql
+    ALTER TABLE itens_vendas ADD CONSTRAINT fk_vendas FOREIGN KEY (id_venda) REFERENCES vendas(id_venda);
+```
+
+## PASSO 6 - Mandando as tabelas de arrasta
+
+Como que fazemos para apagar nossas tabelas? Se criarmos uma tabela que não vamos mais precisar, temos que ter um jeito de mandar ela pro vinagre.
+
+> TEMOS QUE TER CUIDADO, POIS ESTE COMANDO É **IRREVERSÍVEL!**
+
+### Apagar uma tabela inteira:
+```sql
+    DROP TABLE IF EXISTS nome_da_tabela;
+```
+
+```sql
+    DROP TABLE IF EXISTS itens;
+```
+
+### Apagar um BANCO DE DADOS INTEIRO!:
+```sql
+    DROP DATABASE IF EXISTS nome_do_coitado;
+```
+
+```sql
+    DROP DATABASE IF EXISTS loja_bicicleta;
+```
+
